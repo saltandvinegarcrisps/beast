@@ -65,7 +65,7 @@ class Routes
         $this->routes[] = $route;
     }
 
-    public function create(string $method, string $path, callable $controller): Route
+    public function create(string $method, string $path, $controller): Route
     {
         return new Route($method, $this->prefix().$path,
             is_string($controller) ? $this->namespace().$controller : $controller);

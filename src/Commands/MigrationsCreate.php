@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationsCreate extends Command
 {
+    use MigrationNamingTrait;
+
     protected $paths;
 
     public function __construct(Paths $paths)
@@ -36,9 +38,9 @@ class MigrationsCreate extends Command
     {
         $rawName = $input->getArgument('name');
 
-        $name = str_replace(['_', '-'], ' ', strtolower($rawName));
+        $name = $this->toSnakeCase($rawName);
 
-        $className = str_replace(' ', '', ucwords(strtolower($rawName)));
+        $className = $this->toCamelCase($rawName);
 
         $path = $this->paths->resolve('app/migrations');
 

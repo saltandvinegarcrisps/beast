@@ -13,6 +13,9 @@ abstract class Entity implements EntityInterface
 
     public function __get(string $key)
     {
+        if(! array_key_exists($key, $this->attributes)) {
+            throw new \InvalidArgumentException(sprintf('Undefined attribute %s on %s', $key, get_class($this)));
+        }
         return $this->attributes[$key];
     }
 

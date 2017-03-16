@@ -14,7 +14,7 @@ class Route
 
     protected $params;
 
-    public function __construct(string $method, string $path, callable $controller)
+    public function __construct(string $method, string $path, $controller)
     {
         $this->setMethod($method);
         $this->setPath($path);
@@ -37,7 +37,7 @@ class Route
         return $this->path;
     }
 
-    public function setController(callable $controller)
+    public function setController($controller)
     {
         $this->controller = $controller;
     }

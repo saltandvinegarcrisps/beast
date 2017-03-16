@@ -15,15 +15,30 @@ abstract class TableGateway
 
     protected $primary;
 
-    public function __construct(Connection $db, Entity $prototype)
+    public function __construct(Connection $db, EntityInterface $prototype)
     {
         $this->db = $db;
         $this->prototype = $prototype;
     }
 
-    public function getPrototype(): Entity
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    public function getPrimary(): string
+    {
+        return $this->primary;
+    }
+
+    public function getPrototype(): EntityInterface
     {
         return $this->prototype;
+    }
+
+    public function getConnection(): Connection
+    {
+        return $this->db;
     }
 
     public function getQueryBuilder(): QueryBuilder
@@ -64,7 +79,7 @@ abstract class TableGateway
 
     public function count(QueryBuilder $query): int
     {
-        return $this->column($query->select('COUNT(*)'));
+        return $this->column((clone $query)->select('COUNT(*)'));
     }
 
     public function insert(array $params): int

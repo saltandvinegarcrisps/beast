@@ -10,6 +10,8 @@ use Doctrine\DBAL\Connection;
 
 class Migrations extends Command
 {
+    use MigrationNamingTrait;
+
     protected $connection;
 
     protected $paths;
@@ -38,8 +40,11 @@ class Migrations extends Command
 
         foreach ($migrations as $info) {
             if ($continue) {
-                $output->writeln('<info>'.$info['filename'].'</info>');
                 $this->migrate($info['filename'], $info['classname']);
+                $output->writeln($info['filename'] . ' <info>✔</info>');
+            }
+            else {
+                $output->writeln($info['filename'] . ' ✔');
             }
 
             if ($info['filename'] == $last['filename']) {
@@ -86,18 +91,6 @@ class Migrations extends Command
         });
 
         return $files;
-    }
-
-    protected function extract(string $filepath): array
-    {
-        $filename = pathinfo($filepath, PATHINFO_FILENAME);
-        $parts = explode('_', $filename);
-
-        return [
-            'filename' => $filename,
-            'time' => array_pop($parts),
-            'classname' => str_replace(' ', '', ucwords(implode(' ', $parts))),
-        ];
     }
 
     protected function migrate($filename, $classname)

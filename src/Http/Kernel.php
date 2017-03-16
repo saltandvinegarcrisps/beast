@@ -11,8 +11,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use Beast\Framework\Support\ContainerAwareInterface;
-use Beast\Framework\Router\Routes;
-use Beast\Framework\Router\RouteNotFoundException;
+use Beast\Framework\Router\{
+    Route,
+    Routes,
+    RouteNotFoundException
+};
 
 class Kernel implements ServerMiddlewareInterface
 {
@@ -26,7 +29,7 @@ class Kernel implements ServerMiddlewareInterface
         $this->routes = $routes;
     }
 
-    private function controller(string $controller)
+    private function controller(ServerRequestInterface $request, ServerFrameInterface $frame, Route $route, string $controller)
     {
         list($class, $method) = explode('@', $controller, 2);
 
@@ -39,10 +42,10 @@ class Kernel implements ServerMiddlewareInterface
         return $instance->$method($request, $frame->next($request), $route->getParams());
     }
 
-    private function run(callable $callable)
+    private function run(ServerRequestInterface $request, ServerFrameInterface $frame, Route $route, $callable)
     {
         if (is_string($callable) && strpos($callable, '@')) {
-            return $this->controller($callable);
+            return $this->controller($request, $frame, $route, $callable);
         }
 
         return $this->container->call($callable);
@@ -58,7 +61,7 @@ class Kernel implements ServerMiddlewareInterface
 
         $callable = $route->getController();
 
-        $response = $this->run($callable);
+        $response = $this->run($request, $frame, $route, $callable);
 
         if ($response instanceof ResponseInterface) {
             return $response;
