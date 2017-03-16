@@ -12,12 +12,12 @@ class RedisStorage implements StorageInterface
         $this->channel = $channel;
     }
 
-	public function has(string $token): bool
+    public function has(string $token): bool
     {
         return $this->redis->sIsMember($this->channel, $token);
     }
 
-	public function put(string $token)
+    public function put(string $token)
     {
         $this->redis->sAdd($this->channel, $token);
     }

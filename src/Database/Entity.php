@@ -2,7 +2,7 @@
 
 namespace Beast\Framework\Database;
 
-abstract class Entity
+abstract class Entity implements EntityInterface
 {
     protected $attributes;
 
@@ -28,12 +28,12 @@ abstract class Entity
 
     public function __unset(string $key)
     {
-        if(array_key_exists($key, $this->attributes)) {
+        if (array_key_exists($key, $this->attributes)) {
             unset($this->attributes[$key]);
         }
     }
 
-    public function withAttributes(array $attributes): self
+    public function withAttributes(array $attributes): EntityInterface
     {
         $this->attributes = $attributes;
 

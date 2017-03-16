@@ -10,7 +10,7 @@ class Routes
 
     protected $segments;
 
-	protected $namespaces;
+    protected $namespaces;
 
     public function __construct(array $routes = [])
     {
@@ -21,22 +21,22 @@ class Routes
 
     protected function addOptions(array $options)
     {
-        if(isset($options['prefix'])) {
+        if (isset($options['prefix'])) {
             $this->segments[] = rtrim($prefix, '/');
         }
 
-        if(isset($options['namespace'])) {
+        if (isset($options['namespace'])) {
             $this->namespaces[] = '\\'.$namespace;
         }
     }
 
     protected function removeOptions(array $options)
     {
-        if(isset($options['prefix'])) {
+        if (isset($options['prefix'])) {
             array_pop($this->segments);
         }
 
-        if(isset($options['namespace'])) {
+        if (isset($options['namespace'])) {
             array_pop($this->namespaces);
         }
     }
@@ -76,7 +76,7 @@ class Routes
         $methods = ['get', 'head', 'post', 'put', 'delete', 'connect',
             'options', 'trace', 'patch'];
 
-        if(!in_array($method, $methods)) {
+        if (!in_array($method, $methods)) {
             throw new \BadMethodCallException('Method does not exist');
         }
 
@@ -89,8 +89,8 @@ class Routes
 
     public function match(ServerRequestInterface $request): Route
     {
-        foreach($this->routes as $route) {
-            if( ! $route->matches($request)) {
+        foreach ($this->routes as $route) {
+            if (! $route->matches($request)) {
                 continue;
             }
 
@@ -99,5 +99,4 @@ class Routes
 
         throw new RouteNotFoundException('route not found');
     }
-
 }

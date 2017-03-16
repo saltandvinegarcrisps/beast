@@ -43,13 +43,13 @@ class Csrf extends ServerMiddlewareInterface
 
     protected function extractToken(ServerRequestInterface $request): string
     {
-        if($request->hasHeader($this->headerFieldName)) {
+        if ($request->hasHeader($this->headerFieldName)) {
             return $request->getHeaderLine($this->headerFieldName);
         }
 
         $input = $request->getParsedBody();
 
-        if(isset($input[$this->inputFieldName])) {
+        if (isset($input[$this->inputFieldName])) {
             return $input[$this->inputFieldName];
         }
 
@@ -58,7 +58,7 @@ class Csrf extends ServerMiddlewareInterface
 
     public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface
     {
-        if($this->isMethod($request) && $this->isValid($request)) {
+        if ($this->isMethod($request) && $this->isValid($request)) {
             return $frame->next($request);
         }
 

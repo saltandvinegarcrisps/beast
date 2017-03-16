@@ -17,9 +17,15 @@
         "ircmaxell/tari-php": "dev-master",
         "symfony/console": "~3"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Beast\\Framework\\": "src/"
         }
-    }
+    },
+    "config": {
+		"bin-dir": "bin"
+	}
 }

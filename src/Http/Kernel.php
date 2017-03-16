@@ -11,10 +11,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use Beast\Framework\Support\ContainerAwareInterface;
-use Beast\Framework\Router\{
-    Routes,
-    RouteNotFoundException
-};
+use Beast\Framework\Router\Routes;
+use Beast\Framework\Router\RouteNotFoundException;
 
 class Kernel implements ServerMiddlewareInterface
 {
@@ -34,7 +32,7 @@ class Kernel implements ServerMiddlewareInterface
 
         $instance = $this->container->get($class);
 
-        if($instance instanceof ContainerAwareInterface) {
+        if ($instance instanceof ContainerAwareInterface) {
             $instance->setContainer($this->container);
         }
 

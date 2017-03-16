@@ -63,7 +63,7 @@ class Route
 
         $tokens = [];
 
-        if(preg_match_all($pattern, $this->path, $matches)) {
+        if (preg_match_all($pattern, $this->path, $matches)) {
             $tokens = $matches[1];
         }
 
@@ -74,7 +74,7 @@ class Route
 
     public function matches(ServerRequestInterface $request): bool
     {
-        if($this->method != $request->getMethod()) {
+        if ($this->method != $request->getMethod()) {
             return false;
         }
 
@@ -82,7 +82,7 @@ class Route
 
         list($path, $tokens) = $this->tokenise();
 
-        if( ! preg_match('#^'.$path.'$#', $url, $matches)) {
+        if (! preg_match('#^'.$path.'$#', $url, $matches)) {
             return false;
         }
 

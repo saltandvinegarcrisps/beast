@@ -2,7 +2,7 @@
 
 namespace Beast\Framework\Commands;
 
-use Beast\Framework\Paths;
+use Beast\Framework\Support\Paths;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
