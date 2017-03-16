@@ -4,6 +4,8 @@ namespace Beast\Framework\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Driver\PDOStatement;
 
 abstract class TableGateway
 {
@@ -41,28 +43,42 @@ abstract class TableGateway
         return $this->db;
     }
 
+    public function getSchemaManager(): AbstractSchemaManager
+    {
+        return $this->db->getSchemaManager();
+    }
+
+    public function getColumns(): array
+    {
+        $table = $this->getSchemaManager()->getTable($this->table);
+
+        return $table->getColumns();
+    }
+
     public function getQueryBuilder(): QueryBuilder
     {
         return $this->db->createQueryBuilder()->select('*')->from($this->table);
     }
 
-    public function all(): array
+    public function execute(QueryBuilder $query): PDOStatement
     {
-        return $this->get($this->getQueryBuilder());
+        return $this->db->executeQuery($query->getSQL(), $query->getParameters());
     }
 
     public function fetch(QueryBuilder $query)
     {
-        $statement = $this->db->executeQuery($query->getSQL(), $query->getParameters());
+        $statement = $this->execute($query);
+
         if ($row = $statement->fetch()) {
             return (clone $this->prototype)->withAttributes($row);
         }
+
         return false;
     }
 
     public function get(QueryBuilder $query): array
     {
-        $statement = $this->db->executeQuery($query->getSQL(), $query->getParameters());
+        $statement = $this->execute($query);
         $results = [];
 
         foreach ($statement as $row) {
@@ -70,6 +86,13 @@ abstract class TableGateway
         }
 
         return $results;
+    }
+
+    public function all(): array
+    {
+        $query = $this->getQueryBuilder();
+
+        return $this->get($query);
     }
 
     public function column(QueryBuilder $query)
@@ -102,7 +125,7 @@ abstract class TableGateway
     {
         $query->delete($this->table);
 
-        $statement = $this->db->executeQuery($query->getSQL(), $query->getParameters());
+        $statement = $this->execute($query);
 
         return $statement->rowCount();
     }

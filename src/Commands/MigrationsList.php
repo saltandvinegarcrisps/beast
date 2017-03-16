@@ -24,8 +24,8 @@ class Migrations extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate')
-            ->setDescription('Run migrations')
+            ->setName('migrate:list')
+            ->setDescription('List migrations')
         ;
     }
 
@@ -38,39 +38,15 @@ class Migrations extends Command
 
         foreach ($migrations as $info) {
             if ($continue) {
-                $this->migrate($info['filename'], $info['classname']);
-                $output->writeln($info['filename'] . ' <info>✔</info>');
+                $output->writeln($info['filename'] . ' <error>✘</error>');
             }
             else {
-                $output->writeln($info['filename'] . ' ✔');
+                $output->writeln($info['filename'] . ' <info>✔</info>');
             }
 
             if ($info['filename'] == $last['filename']) {
                 $continue = true;
             }
         }
-    }
-
-    protected function migrate($filename, $classname)
-    {
-        require $this->getMigrationFilepath($filename);
-
-        $migration = new $classname();
-
-        $sm = $this->connection->getSchemaManager();
-        $fromSchema = $sm->createSchema();
-
-        $toSchema = clone $fromSchema;
-        $migration->up($toSchema);
-
-        $queries = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
-
-        foreach ($queries as $sql) {
-            $this->connection->query($sql);
-        }
-
-        $this->connection->insert('migrations', [
-            'filename' => $filename,
-        ]);
     }
 }
