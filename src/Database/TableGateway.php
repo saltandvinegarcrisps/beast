@@ -4,7 +4,6 @@ namespace Beast\Framework\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Driver\PDOStatement;
 
 abstract class TableGateway
@@ -43,16 +42,22 @@ abstract class TableGateway
         return $this->db;
     }
 
-    public function getSchemaManager(): AbstractSchemaManager
-    {
-        return $this->db->getSchemaManager();
-    }
-
     public function getColumns(): array
     {
-        $table = $this->getSchemaManager()->getTable($this->table);
+        $table = $this->db->getSchemaManager()->createSchema()->getTable($this->table);
 
         return $table->getColumns();
+    }
+
+    public function getDefaults(): array
+    {
+        $defaults = [];
+
+        foreach($this->getColumns() as $column) {
+            $defaults[$column->getName()] = $column->getDefault();
+        }
+
+        return $defaults;
     }
 
     public function getQueryBuilder(): QueryBuilder
