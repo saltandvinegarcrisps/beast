@@ -6,5 +6,5 @@ interface EntityInterface
 {
     public function withAttributes(array $attributes): EntityInterface;
 
-    public function getAttributes(): EntityInterface;
+    public function getAttributes(): array;
 }
