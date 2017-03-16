@@ -22,11 +22,11 @@ class Routes
     protected function addOptions(array $options)
     {
         if (isset($options['prefix'])) {
-            $this->segments[] = rtrim($prefix, '/');
+            $this->segments[] = rtrim($options['prefix'], '/');
         }
 
         if (isset($options['namespace'])) {
-            $this->namespaces[] = '\\'.$namespace;
+            $this->namespaces[] = '\\'.$options['namespace'];
         }
     }
 
