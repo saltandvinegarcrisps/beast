@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\DBAL\Connection;
 
-class Migrations extends Command
+class MigrationsList extends Command
 {
     use MigrationTrait;
 
