@@ -24,7 +24,7 @@ class MigrationsCreate extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate:create')
+            ->setName('migrations:create')
             ->setDescription('Create a new migration')
             ->setDefinition(
                 new InputDefinition([

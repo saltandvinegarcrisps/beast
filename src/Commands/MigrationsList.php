@@ -24,7 +24,7 @@ class Migrations extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate:list')
+            ->setName('migrations:list')
             ->setDescription('List migrations')
         ;
     }

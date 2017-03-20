@@ -20,7 +20,7 @@ class MigrationsInstall extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate:install')
+            ->setName('migrates:install')
             ->setDescription('Create migrations table')
         ;
     }

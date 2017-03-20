@@ -24,7 +24,7 @@ class Migrations extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate')
+            ->setName('migrations:run')
             ->setDescription('Run migrations')
         ;
     }
