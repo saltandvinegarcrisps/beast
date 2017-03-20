@@ -4,7 +4,9 @@ namespace Beast\Framework\Database;
 
 abstract class Entity implements EntityInterface
 {
-    protected $attributes;
+    protected $attributes = [];
+
+    protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {
@@ -46,5 +48,20 @@ abstract class Entity implements EntityInterface
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    public function __toString()
+    {
+        return $this->toJson();
+    }
+
+    public function toArray(): array
+    {
+        return array_diff_key($this->getAttributes(), array_fill_keys($this->guarded, null));
+    }
+
+    public function toJson(): string
+    {
+        return json_encode($this->toArray());
     }
 }
