@@ -87,6 +87,11 @@ class Routes
         return $route;
     }
 
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
     public function match(ServerRequestInterface $request): Route
     {
         foreach ($this->routes as $route) {
