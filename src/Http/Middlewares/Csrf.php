@@ -10,7 +10,7 @@ use Tari\ServerFrameInterface;
 
 use Beast\Framework\Tokens\StorageInterface;
 
-class Csrf extends ServerMiddlewareInterface
+class Csrf implements ServerMiddlewareInterface
 {
     protected $storage;
 
@@ -58,7 +58,7 @@ class Csrf extends ServerMiddlewareInterface
 
     public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface
     {
-        if ($this->isMethod($request) && $this->isValid($request)) {
+        if (! $this->isMethod($request) || ($this->isMethod($request) && $this->isValid($request))) {
             return $frame->next($request);
         }
 
