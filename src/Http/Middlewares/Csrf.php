@@ -38,7 +38,7 @@ class Csrf implements ServerMiddlewareInterface
     {
         $token = $this->extractToken($request);
 
-        return $this->storage->has($token);
+        return $this->storage->validate($token);
     }
 
     protected function extractToken(ServerRequestInterface $request): string
