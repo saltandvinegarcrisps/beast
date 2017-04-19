@@ -8,13 +8,6 @@ trait MigrationTrait
 
     protected $paths;
 
-    protected function getLastRanMigration()
-    {
-        $stmt = $this->connection->query('SELECT * FROM migrations ORDER BY id DESC');
-
-        return $stmt->fetch() ?: false;
-    }
-
     protected function getMigrationsPath(): string
     {
         return $this->paths->resolve('app/migrations');
@@ -41,15 +34,15 @@ trait MigrationTrait
         return str_replace(' ', '_', $str);
     }
 
-    protected function extract($fileinfo): array
+    protected function extractFileinfo($fileinfo): array
     {
-        $basename = $fileinfo->getBasename();
+        $filename = $fileinfo->getBasename('.' . $fileinfo->getExtension());
 
-        list($year, $month, $day, $hour, $min, $sec, $name) = sscanf($basename, '%4d_%2d_%2d_%2d%2d%2d_%s');
+        list($year, $month, $day, $hour, $min, $sec, $name) = sscanf($filename, '%4d_%2d_%2d_%2d%2d%2d_%s');
 
         return [
             'date' => new \DateTime(sprintf('%d-%d-%d %d:%d:%d', $year, $month, $day, $hour, $min, $sec)),
-            'filename' => $basename,
+            'filename' => $filename,
             'name' => $name,
             'classname' => $this->toCamelCase($name),
         ];
@@ -63,7 +56,7 @@ trait MigrationTrait
 
         foreach ($fi as $fileinfo) {
             if ($fileinfo->getExtension() == 'php') {
-                $files[] = $this->extract($fileinfo);
+                $files[] = $this->extractFileinfo($fileinfo);
             }
         }
 
@@ -76,5 +69,12 @@ trait MigrationTrait
         });
 
         return $files;
+    }
+
+    protected function getRanMigrations(): array
+    {
+        $stmt = $this->connection->query('SELECT * FROM migrations ORDER BY id DESC');
+
+        return $stmt->fetchAll();
     }
 }

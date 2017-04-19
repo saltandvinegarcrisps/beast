@@ -30,26 +30,24 @@ class Migrations extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $migrations = $this->getMigrations();
+        $installed = $this->getRanMigrations();
 
-        $last = $this->getLastRanMigration();
-        $continue = $last ? false : true;
+        foreach ($migrations as $migration) {
+            $migrated = array_reduce($installed, function($carry, $item) use($migration) {
+                return $migration['filename'] == $item['filename'] ? true : $carry;
+            }, false);
 
-        foreach ($migrations as $info) {
-            if ($continue) {
-                $this->migrate($info['filename'], $info['classname']);
-                $output->writeln($info['filename'] . ' <info>✔</info>');
+            if(! $migrated) {
+                $this->migrate($migration['filename'], $migration['classname'], $output);
+                $output->writeln($migration['filename'] . ' <info>✔</info>');
             }
             else {
-                $output->writeln($info['filename'] . ' ✔');
-            }
-
-            if ($info['filename'] == $last['filename']) {
-                $continue = true;
+                $output->writeln($migration['filename'] . ' ✔');
             }
         }
     }
 
-    protected function migrate(string $filename, string $classname)
+    protected function migrate(string $filename, string $classname, OutputInterface $output)
     {
         require $this->getMigrationFilepath($filename);
 
@@ -64,6 +62,7 @@ class Migrations extends Command
         $queries = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($queries as $sql) {
+            $output->writeln($sql);
             $this->connection->query($sql);
         }
 

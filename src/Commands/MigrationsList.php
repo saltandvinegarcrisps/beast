@@ -30,20 +30,18 @@ class MigrationsList extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $migrations = $this->getMigrations();
+        $installed = $this->getRanMigrations();
 
-        $last = $this->getLastRanMigration();
-        $continue = $last ? false : true;
+        foreach ($migrations as $migration) {
+            $migrated = array_reduce($installed, function($carry, $item) use($migration) {
+                return $migration['filename'] == $item['filename'] ? true : $carry;
+            }, false);
 
-        foreach ($migrations as $info) {
-            if ($continue) {
-                $output->writeln($info['name'] . ' <error>✘</error>');
+            if(! $migrated) {
+                $output->writeln($migration['name'] . ' <error>✘</error>');
             }
             else {
-                $output->writeln($info['name'] . ' <info>✔</info>');
-            }
-
-            if ($info['filename'] == $last['filename']) {
-                $continue = true;
+                $output->writeln($migration['name'] . ' <info>✔</info>');
             }
         }
     }
