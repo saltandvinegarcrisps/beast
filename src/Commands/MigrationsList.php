@@ -12,8 +12,6 @@ class MigrationsList extends Command
 {
     use MigrationTrait;
 
-    use MigrationNamingTrait;
-
     public function __construct(Connection $connection, Paths $paths)
     {
         $this->connection = $connection;
@@ -38,10 +36,10 @@ class MigrationsList extends Command
 
         foreach ($migrations as $info) {
             if ($continue) {
-                $output->writeln($info['filename'] . ' <error>✘</error>');
+                $output->writeln($info['name'] . ' <error>✘</error>');
             }
             else {
-                $output->writeln($info['filename'] . ' <info>✔</info>');
+                $output->writeln($info['name'] . ' <info>✔</info>');
             }
 
             if ($info['filename'] == $last['filename']) {

@@ -12,8 +12,6 @@ class Migrations extends Command
 {
     use MigrationTrait;
 
-    use MigrationNamingTrait;
-
     public function __construct(Connection $connection, Paths $paths)
     {
         $this->connection = $connection;
@@ -51,7 +49,7 @@ class Migrations extends Command
         }
     }
 
-    protected function migrate($filename, $classname)
+    protected function migrate(string $filename, string $classname)
     {
         require $this->getMigrationFilepath($filename);
 
@@ -61,7 +59,7 @@ class Migrations extends Command
         $fromSchema = $sm->createSchema();
 
         $toSchema = clone $fromSchema;
-        $migration->up($toSchema);
+        $migration->migrate($toSchema);
 
         $queries = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 

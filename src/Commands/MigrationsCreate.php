@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationsCreate extends Command
 {
-    use MigrationNamingTrait;
+    use MigrationTrait;
 
     protected $paths;
 
@@ -50,19 +50,16 @@ use Doctrine\DBAL\Schema\Schema;
 
 class %s
 {
-	public function up(Schema $schema)
-	{
-		// ...
-	}
-
-	public function down(Schema $schema)
+	public function migrate(Schema $schema)
 	{
 		// ...
 	}
 }
 ';
 
-        file_put_contents(sprintf('%s/%s_%s.php', $path, $name, time()), sprintf($template, $className));
+        $date = date('Y_m_d_His');
+
+        file_put_contents(sprintf('%s/%s_%s.php', $path, $date, $name), sprintf($template, $className));
 
         $output->writeln(sprintf('<info>Created migration %s</info>', $name));
     }
