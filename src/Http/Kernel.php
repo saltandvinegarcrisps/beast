@@ -11,11 +11,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use Beast\Framework\Support\ContainerAwareInterface;
-use Beast\Framework\Router\{
-    Route,
-    Routes,
-    RouteNotFoundException
-};
+use Beast\Framework\Router\Route;
+use Beast\Framework\Router\Routes;
+use Beast\Framework\Router\RouteNotFoundException;
 
 class Kernel implements ServerMiddlewareInterface
 {

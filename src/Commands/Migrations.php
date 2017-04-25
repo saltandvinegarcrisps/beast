@@ -33,15 +33,14 @@ class Migrations extends Command
         $installed = $this->getRanMigrations();
 
         foreach ($migrations as $migration) {
-            $migrated = array_reduce($installed, function($carry, $item) use($migration) {
+            $migrated = array_reduce($installed, function ($carry, $item) use ($migration) {
                 return $migration['filename'] == $item['filename'] ? true : $carry;
             }, false);
 
-            if(! $migrated) {
+            if (! $migrated) {
                 $this->migrate($migration['filename'], $migration['classname'], $output);
                 $output->writeln($migration['filename'] . ' <info>✔</info>');
-            }
-            else {
+            } else {
                 $output->writeln($migration['filename'] . ' ✔');
             }
         }

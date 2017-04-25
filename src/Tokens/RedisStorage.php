@@ -19,7 +19,7 @@ class RedisStorage implements StorageInterface
 
     public function validate(string $token): bool
     {
-        if($this->redis->sIsMember($this->channel, $token)) {
+        if ($this->redis->sIsMember($this->channel, $token)) {
             $this->redis->sRemove($this->channel, $token);
             return true;
         }

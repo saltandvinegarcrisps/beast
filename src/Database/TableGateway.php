@@ -53,7 +53,7 @@ abstract class TableGateway
     {
         $defaults = [];
 
-        foreach($this->getColumns() as $column) {
+        foreach ($this->getColumns() as $column) {
             $defaults[$column->getName()] = $column->getDefault();
         }
 

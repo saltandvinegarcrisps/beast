@@ -1,7 +1,7 @@
 {
     "name": "rwarasaurus/beast",
     "type": "library",
-    "license": "proprietary",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Kieron",
