@@ -52,17 +52,23 @@ class Migrations extends Command
 
         $migration = new $classname();
 
-        $sm = $this->connection->getSchemaManager();
-        $fromSchema = $sm->createSchema();
+        if(method_exists($migration, 'migrate')) {
+            $sm = $this->connection->getSchemaManager();
+            $fromSchema = $sm->createSchema();
 
-        $toSchema = clone $fromSchema;
-        $migration->migrate($toSchema);
+            $toSchema = clone $fromSchema;
+            $migration->migrate($toSchema);
 
-        $queries = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
+            $queries = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
-        foreach ($queries as $sql) {
-            $output->writeln($sql);
-            $this->connection->query($sql);
+            foreach ($queries as $sql) {
+                $output->writeln($sql);
+                $this->connection->query($sql);
+            }
+        }
+
+        if(method_exists($migration, 'seed')) {
+            $migration->seed($this->connection);
         }
 
         $this->connection->insert('migrations', [
