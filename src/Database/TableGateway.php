@@ -42,22 +42,16 @@ abstract class TableGateway
         return $this->db;
     }
 
-    public function getColumns(): array
-    {
-        $table = $this->db->getSchemaManager()->createSchema()->getTable($this->table);
-
-        return $table->getColumns();
-    }
-
     public function getDefaults(): array
     {
-        $defaults = [];
+        $statement = $this->db->query('DESCRIBE '.$this->table);
+        $columns = [];
 
-        foreach ($this->getColumns() as $column) {
-            $defaults[$column->getName()] = $column->getDefault();
+        foreach($statement as $row) {
+            $columns[$row['Field']] = $row['Default'];
         }
 
-        return $defaults;
+        return $columns;
     }
 
     public function getQueryBuilder(): QueryBuilder
