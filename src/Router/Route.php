@@ -93,7 +93,7 @@ class Route
 
     protected function tokenise(): array
     {
-        $pattern = '#\{([A-z]+)\}#';
+        $pattern = '#\{([A-z0-9\-_]+)\}#';
 
         $tokens = [];
 
@@ -101,7 +101,7 @@ class Route
             $tokens = $matches[1];
         }
 
-        $path = preg_replace($pattern, '([A-z0-9]+)', $this->path);
+        $path = preg_replace($pattern, '([^/]+)', $this->path);
 
         return [$path, $tokens];
     }
