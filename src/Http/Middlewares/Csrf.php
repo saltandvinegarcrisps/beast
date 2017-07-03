@@ -2,6 +2,8 @@
 
 namespace Beast\Framework\Http\Middlewares;
 
+use InvalidArgumentException;
+
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -53,7 +55,11 @@ class Csrf implements ServerMiddlewareInterface
             return $input[$this->inputFieldName];
         }
 
-        return '';
+        throw new InvalidArgumentException(sprintf(
+            'Csrf token not found in %s header or %s body',
+            $this->headerFieldName,
+            $this->inputFieldName
+        ));
     }
 
     public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface
