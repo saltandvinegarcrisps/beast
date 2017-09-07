@@ -73,7 +73,7 @@ class Routes
 
     public function __call(string $method, array $args): Route
     {
-        $methods = ['get', 'head', 'post', 'put', 'delete', 'connect',
+        $methods = ['any', 'get', 'head', 'post', 'put', 'delete', 'connect',
             'options', 'trace', 'patch'];
 
         if (!in_array($method, $methods)) {
