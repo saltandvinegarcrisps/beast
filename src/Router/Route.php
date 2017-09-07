@@ -108,7 +108,7 @@ class Route
 
     public function matches(ServerRequestInterface $request): bool
     {
-        if ($this->method != $request->getMethod()) {
+        if ($this->method != 'ANY' && $this->method != $request->getMethod()) {
             return false;
         }
 
