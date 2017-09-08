@@ -55,6 +55,10 @@ trait MigrationTrait
         $files = [];
 
         foreach ($fi as $fileinfo) {
+            if(strpos($fileinfo->getFilename(), 'skip_') === 0) {
+                continue;
+            }
+
             if ($fileinfo->getExtension() == 'php') {
                 $files[] = $this->extractFileinfo($fileinfo);
             }
