@@ -16,9 +16,14 @@ abstract class TableGateway
 
     protected $primary;
 
-    public function __construct(Connection $db, EntityInterface $prototype)
+    public function __construct(Connection $db, EntityInterface $prototype = null)
     {
         $this->db = $db;
+
+        if($prototype === null) {
+            $prototype = new class extends Entity {};
+        }
+
         $this->prototype = $prototype;
     }
 
@@ -44,14 +49,7 @@ abstract class TableGateway
 
     public function getDefaults(): array
     {
-        $statement = $this->db->query('DESCRIBE '.$this->table);
-        $columns = [];
-
-        foreach($statement as $row) {
-            $columns[$row['Field']] = $row['Default'];
-        }
-
-        return $columns;
+        throw new \ErrorException('getDefaults is depreciated.');
     }
 
     public function getQueryBuilder(): QueryBuilder
@@ -64,12 +62,17 @@ abstract class TableGateway
         return $this->db->executeQuery($query->getSQL(), $query->getParameters());
     }
 
+    public function model(array $attributes): EntityInterface
+    {
+        return (clone $this->prototype)->withAttributes($attributes);
+    }
+
     public function fetch(QueryBuilder $query)
     {
         $statement = $this->execute($query);
 
         if ($row = $statement->fetch()) {
-            return (clone $this->prototype)->withAttributes($row);
+            return $this->model($row);
         }
 
         return false;
@@ -81,7 +84,7 @@ abstract class TableGateway
         $results = [];
 
         foreach ($statement as $row) {
-            $results[] = (clone $this->prototype)->withAttributes($row);
+            $results[] = $this->model($row);
         }
 
         return $results;
