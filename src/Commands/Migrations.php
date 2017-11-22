@@ -52,7 +52,7 @@ class Migrations extends Command
 
         $migration = new $classname();
 
-        if(method_exists($migration, 'migrate')) {
+        if (method_exists($migration, 'migrate')) {
             $sm = $this->connection->getSchemaManager();
             $fromSchema = $sm->createSchema();
 
@@ -67,7 +67,7 @@ class Migrations extends Command
             }
         }
 
-        if(method_exists($migration, 'seed')) {
+        if (method_exists($migration, 'seed')) {
             $migration->seed($this->connection);
         }
 

@@ -20,8 +20,9 @@ abstract class TableGateway
     {
         $this->db = $db;
 
-        if($prototype === null) {
-            $prototype = new class extends Entity {};
+        if ($prototype === null) {
+            $prototype = new class extends Entity {
+            };
         }
 
         $this->prototype = $prototype;

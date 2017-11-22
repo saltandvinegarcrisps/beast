@@ -10,7 +10,7 @@ abstract class Entity implements EntityInterface
 
     public function __construct(array $attributes = [])
     {
-        $this->attributes = $attributes;
+        $this->setAttributes($attributes);
     }
 
     public function __get(string $key)
@@ -37,9 +37,14 @@ abstract class Entity implements EntityInterface
 
     public function withAttributes(array $attributes): EntityInterface
     {
-        $this->attributes = $attributes;
+        $this->setAttributes($attributes);
 
         return $this;
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
     }
 
     public function getAttributes(): array

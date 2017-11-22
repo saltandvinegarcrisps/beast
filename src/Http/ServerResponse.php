@@ -12,7 +12,8 @@ class ServerResponse
             throw new \RuntimeException('Headers have already been sent');
         }
 
-        header(sprintf('HTTP/%s %d %s',
+        header(sprintf(
+            'HTTP/%s %d %s',
             $response->getProtocolVersion(),
             $response->getStatusCode(),
             $response->getReasonPhrase()

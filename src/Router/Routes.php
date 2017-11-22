@@ -67,8 +67,11 @@ class Routes
 
     public function create(string $method, string $path, $controller): Route
     {
-        return new Route($method, $this->prefix().$path,
-            is_string($controller) ? $this->namespace().$controller : $controller);
+        return new Route(
+            $method,
+            $this->prefix().$path,
+            is_string($controller) ? $this->namespace().$controller : $controller
+        );
     }
 
     public function __call(string $method, array $args): Route
@@ -95,7 +98,7 @@ class Routes
     public function match(ServerRequestInterface $request): Route
     {
         foreach ($this->routes as $route) {
-            if (! $route->matches($request)) {
+            if (!$route->matches($request)) {
                 continue;
             }
 
