@@ -65,7 +65,7 @@ abstract class TableGateway
 
     public function model(array $attributes): EntityInterface
     {
-        return (clone $this->prototype)->withAttributes($attributes);
+        return (clone $this->getPrototype())->withAttributes($attributes);
     }
 
     public function fetch(QueryBuilder $query)
