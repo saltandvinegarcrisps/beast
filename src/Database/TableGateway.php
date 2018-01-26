@@ -48,11 +48,6 @@ abstract class TableGateway
         return $this->db;
     }
 
-    public function getDefaults(): array
-    {
-        throw new \ErrorException('getDefaults is depreciated.');
-    }
-
     public function getQueryBuilder(): QueryBuilder
     {
         return $this->db->createQueryBuilder()->select('*')->from($this->table);

@@ -4,24 +4,31 @@ namespace Beast\Framework\Http\Middlewares;
 
 use InvalidArgumentException;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-use Tari\ServerMiddlewareInterface;
-use Tari\ServerFrameInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 use Beast\Framework\Tokens\StorageInterface;
 
-class Csrf implements ServerMiddlewareInterface
+class Csrf implements MiddlewareInterface
 {
+    protected $response;
+
     protected $storage;
 
     protected $inputFieldName;
 
     protected $headerFieldName;
 
-    public function __construct(StorageInterface $storage, string $inputFieldName = 'csrf_token', string $headerFieldName = 'X-Csrf-Token')
-    {
+    public function __construct(
+        ResponseInterface $response,
+        StorageInterface $storage,
+        string $inputFieldName = 'csrf_token',
+        string $headerFieldName = 'X-Csrf-Token'
+    ) {
+        $this->response = $response;
         $this->storage = $storage;
         $this->inputFieldName = $inputFieldName;
         $this->headerFieldName = $headerFieldName;
@@ -62,12 +69,14 @@ class Csrf implements ServerMiddlewareInterface
         ));
     }
 
-    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (! $this->isMethod($request) || ($this->isMethod($request) && $this->isValid($request))) {
-            return $frame->next($request);
+            return $handler->handle($request);
         }
 
-        return $frame->factory()->createResponse(400, [], 'Invalid CSRF Token');
+        $this->response->getBody()->write('Invalid CSRF Token');
+
+        return $this->response->withStatus(400);
     }
 }

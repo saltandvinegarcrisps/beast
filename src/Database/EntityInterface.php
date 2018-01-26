@@ -9,4 +9,8 @@ interface EntityInterface
     public function setAttributes(array $attributes);
 
     public function getAttributes(): array;
+
+    public function toArray(): array;
+
+    public function toJson(): string;
 }

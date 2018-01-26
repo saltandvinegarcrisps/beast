@@ -38,18 +38,6 @@ class Route
         return $this->arguments;
     }
 
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     public function getParams(): array
     {
         return $this->params;
