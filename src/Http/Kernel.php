@@ -12,7 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 
 use Beast\Framework\Router\Route;
 use Beast\Framework\Router\Routes;
-use Beast\Framework\Router\RouteNotFoundException;
 
 use Beast\Framework\Support\ContainerAwareInterface;
 
@@ -62,12 +61,7 @@ class Kernel implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        try {
-            $route = $this->routes->match($request);
-        } catch (RouteNotFoundException $e) {
-            $this->response->getBody()->write($e->getMessage());
-            return $this->response->withStatus(404);
-        }
+        $route = $this->routes->match($request);
 
         $callable = $route->getController();
 
