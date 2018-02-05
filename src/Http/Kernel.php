@@ -65,14 +65,6 @@ class Kernel implements MiddlewareInterface
 
         $callable = $route->getController();
 
-        $response = $this->run($request, $handler->handle($request), $route, $callable);
-
-        if ($response instanceof ResponseInterface) {
-            return $response;
-        }
-
-        $this->response->getBody()->write($response);
-
-        return $this->response->withStatus(200);
+        return $this->run($request, $handler->handle($request), $route, $callable);
     }
 }
