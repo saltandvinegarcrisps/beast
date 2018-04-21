@@ -63,8 +63,12 @@ abstract class TableGateway
         return (clone $this->getPrototype())->withAttributes($attributes);
     }
 
-    public function fetch(QueryBuilder $query)
+    public function fetch(QueryBuilder $query = null)
     {
+        if (null === $query) {
+            $query = $this->getQueryBuilder();
+        }
+
         $statement = $this->execute($query);
 
         if ($row = $statement->fetch()) {
@@ -74,8 +78,12 @@ abstract class TableGateway
         return false;
     }
 
-    public function get(QueryBuilder $query): array
+    public function get(QueryBuilder $query = null): array
     {
+        if (null === $query) {
+            $query = $this->getQueryBuilder();
+        }
+
         $statement = $this->execute($query);
         $results = [];
 
@@ -84,13 +92,6 @@ abstract class TableGateway
         }
 
         return $results;
-    }
-
-    public function all(): array
-    {
-        $query = $this->getQueryBuilder();
-
-        return $this->get($query);
     }
 
     public function column(QueryBuilder $query)
