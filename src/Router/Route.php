@@ -81,17 +81,31 @@ class Route
 
     protected function tokenise(): array
     {
-        $pattern = '#\{([A-z0-9\-_]+)\}#';
-
+        $pattern = '#\{([A-z0-9\-_]+)(:([A-z0-9\-_]+))?\}#';
         $tokens = [];
 
         if (preg_match_all($pattern, $this->path, $matches)) {
+            // named parameters to combine when matched with a URL
             $tokens = $matches[1];
+
+            // path to transform
+            $path = $this->path;
+
+            // replace named parameters with valid regex
+            foreach ($matches[0] as $index => $search) {
+                switch ($matches[3][$index]) {
+                    case 'num': $replace = '([0-9]+)'; break;
+                    case 'alpha': $replace = '([A-Za-z]+)'; break;
+                    case 'alnum': $replace = '([A-Za-z0-9]+)'; break;
+                    default: $replace = '([^/]+)';
+                }
+                $path = str_replace($search, $replace, $path);
+            }
+
+            return [$path, $tokens];
         }
 
-        $path = preg_replace($pattern, '([^/]+)', $this->path);
-
-        return [$path, $tokens];
+        return [$this->path, $tokens];
     }
 
     public function matches(ServerRequestInterface $request): bool
@@ -112,4 +126,4 @@ class Route
 
         return true;
     }
-}
+} 
