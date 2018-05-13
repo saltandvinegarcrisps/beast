@@ -16,8 +16,6 @@ class Route
 
     protected $arguments = [];
 
-    protected $description = '';
-
     public function __construct(string $method, string $path, $controller)
     {
         $this->setMethod($method);
@@ -79,9 +77,39 @@ class Route
         return $this->method;
     }
 
+    protected function parameterise(array $matches, string $path): string
+    {
+        $pattern = function ($token): string {
+            $map = [
+                'num' => '([0-9]+)',
+                'alpha' => '([A-Za-z]+)',
+                'alnum' => '([A-Za-z0-9]+)',
+            ];
+
+            if (array_key_exists($token, $map)) {
+                return $map[$token];
+            }
+
+            // enum pattern "option1,option2"
+            if (preg_match('#"([^"]+)"#', $token, $match)) {
+                $options = implode('|', explode(',', $match[1]));
+                return '('.$options.')';
+            }
+
+            // default is to match anything
+            return '([^/]+)';
+        };
+
+        foreach ($matches[0] as $index => $search) {
+            $path = str_replace($search, $pattern($matches[3][$index]), $path);
+        }
+
+        return $path;
+    }
+
     protected function tokenise(): array
     {
-        $pattern = '#\{([A-z0-9\-_]+)(:([A-z0-9\-_]+))?\}#';
+        $pattern = '#\{([A-z0-9\-_]+)(:([A-z0-9",\-_]+))?\}#';
         $tokens = [];
 
         if (preg_match_all($pattern, $this->path, $matches)) {
@@ -92,15 +120,7 @@ class Route
             $path = $this->path;
 
             // replace named parameters with valid regex
-            foreach ($matches[0] as $index => $search) {
-                switch ($matches[3][$index]) {
-                    case 'num': $replace = '([0-9]+)'; break;
-                    case 'alpha': $replace = '([A-Za-z]+)'; break;
-                    case 'alnum': $replace = '([A-Za-z0-9]+)'; break;
-                    default: $replace = '([^/]+)';
-                }
-                $path = str_replace($search, $replace, $path);
-            }
+            $path = $this->parameterise($matches, $path);
 
             return [$path, $tokens];
         }

@@ -14,7 +14,10 @@ class Routes
 
     public function __construct(array $routes = [])
     {
-        $this->routes = $routes;
+        $this->routes = new \SplObjectStorage;
+        foreach ($routes as $route) {
+            $this->append($route);
+        }
         $this->segments = [];
         $this->namespaces = [];
     }
@@ -62,7 +65,7 @@ class Routes
 
     public function append(Route $route)
     {
-        $this->routes[] = $route;
+        $this->routes->attach($route);
     }
 
     public function create(string $method, string $path, $controller): Route
@@ -90,19 +93,12 @@ class Routes
         return $route;
     }
 
-    public function getRoutes(): array
-    {
-        return $this->routes;
-    }
-
     public function match(ServerRequestInterface $request): Route
     {
         foreach ($this->routes as $route) {
-            if (!$route->matches($request)) {
-                continue;
+            if ($route->matches($request)) {
+                return $route;
             }
-
-            return $route;
         }
 
         throw new RouteNotFoundException('route not found');
