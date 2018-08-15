@@ -101,6 +101,6 @@ class Routes
             }
         }
 
-        throw new RouteNotFoundException('route not found');
+        throw new RouteNotFoundException('Route not found: '.$request->getUri()->getPath());
     }
 }

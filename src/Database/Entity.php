@@ -59,7 +59,15 @@ abstract class Entity implements EntityInterface
 
     public function toJson(): string
     {
-        return json_encode($this->toArray());
+        $encoded = json_encode($this->toArray());
+
+        if (false === $encoded) {
+            throw new \InvalidArgumentException(
+                'json_encode error: ' . json_last_error_msg()
+            );
+        }
+
+        return $encoded;
     }
 
     public function __toString()

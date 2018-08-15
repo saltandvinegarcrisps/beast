@@ -107,7 +107,11 @@ abstract class TableGateway
     public function insert(array $params): int
     {
         if ($this->db->insert($this->table, $params)) {
-            return $this->db->lastInsertId();
+            $platform = $this->db->getDatabasePlatform();
+            $sequenceName = $platform->supportsSequences() ?
+                $platform->getIdentitySequenceName($this->table, $this->primary) :
+                null;
+            return $this->db->lastInsertId($sequenceName);
         }
 
         return 0;
