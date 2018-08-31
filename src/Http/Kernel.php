@@ -33,7 +33,7 @@ class Kernel implements MiddlewareInterface
         array $args,
         string $controller
     ) {
-        list($class, $method) = explode('@', $controller, 2);
+        [$class, $method] = explode('@', $controller, 2);
 
         $instance = $this->container->get($class);
 

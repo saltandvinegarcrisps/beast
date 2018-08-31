@@ -28,6 +28,16 @@
         }
     },
     "config": {
-		"bin-dir": "bin"
-	}
+        "bin-dir": "bin"
+    },
+    "scripts": {
+        "psr": [
+            "./bin/php-cs-fixer fix src/ --rules=@PSR2"
+        ],
+        "uninstall": [
+            "rm -rf ./bin",
+            "rm -rf ./vendor",
+            "rm ./composer.lock"
+        ]
+    }
 }
