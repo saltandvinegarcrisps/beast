@@ -82,8 +82,9 @@ class Route
         $pattern = function ($token): string {
             $map = [
                 'num' => '([0-9]+)',
-                'alpha' => '^([a-zA-z]*[-]?)+$',
+                'alpha' => '([A-Za-z]+)',
                 'alnum' => '([A-Za-z0-9]+)',
+                'slug' => '([a-zA-Z-_]+)'
             ];
 
             if (array_key_exists($token, $map)) {
