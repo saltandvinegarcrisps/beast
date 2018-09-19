@@ -82,7 +82,7 @@ class Route
         $pattern = function ($token): string {
             $map = [
                 'num' => '([0-9]+)',
-                'alpha' => '([A-Za-z]+)',
+                'alpha' => '^([a-zA-z]*[-]?)+$',
                 'alnum' => '([A-Za-z0-9]+)',
             ];
 
