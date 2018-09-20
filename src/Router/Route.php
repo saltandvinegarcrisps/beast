@@ -84,6 +84,7 @@ class Route
                 'num' => '([0-9]+)',
                 'alpha' => '([A-Za-z]+)',
                 'alnum' => '([A-Za-z0-9]+)',
+                'slug' => '([a-zA-Z-_]+)'
             ];
 
             if (array_key_exists($token, $map)) {
