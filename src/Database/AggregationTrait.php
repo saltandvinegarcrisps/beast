@@ -2,6 +2,8 @@
 
 namespace Beast\Framework\Database;
 
+use Doctrine\DBAL\Query\QueryBuilder;
+
 trait AggregationTrait
 {
     /**
@@ -12,9 +14,9 @@ trait AggregationTrait
      * @param QueryBuilder
      * @return string
      */
-    private function aggregate(string $method, string $column, QueryBuilder $query): string
+    private function aggregate(string $method, string $column, QueryBuilder $query = null): string
     {
-        $newQuery = clone $query;
+        $newQuery = null === $query ? $this->getQueryBuilder() : clone $query;
 
         $newQuery->select(sprintf('%s(%s)', $method, $column));
 
@@ -28,9 +30,9 @@ trait AggregationTrait
      * @param string|null
      * @return string
      */
-    public function count(QueryBuilder $query, string $column = null): string
+    public function count(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate(__METHOD__, $column ?: $this->primary, $query);
+        return $this->aggregate('count', $column ?: $this->primary, $query);
     }
 
     /**
@@ -40,9 +42,9 @@ trait AggregationTrait
      * @param string|null
      * @return string
      */
-    public function sum(QueryBuilder $query, string $column = null): string
+    public function sum(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate(__METHOD__, $column ?: $this->primary, $query);
+        return $this->aggregate('sum', $column ?: $this->primary, $query);
     }
 
     /**
@@ -52,9 +54,9 @@ trait AggregationTrait
      * @param string|null
      * @return string
      */
-    public function min(QueryBuilder $query, string $column = null): string
+    public function min(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate(__METHOD__, $column ?: $this->primary, $query);
+        return $this->aggregate('min', $column ?: $this->primary, $query);
     }
 
     /**
@@ -64,8 +66,8 @@ trait AggregationTrait
      * @param string|null
      * @return string
      */
-    public function max(QueryBuilder $query, string $column = null): string
+    public function max(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate(__METHOD__, $column ?: $this->primary, $query);
+        return $this->aggregate('max', $column ?: $this->primary, $query);
     }
 }

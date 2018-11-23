@@ -6,7 +6,7 @@ use Generator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Driver\PDOStatement;
-use Doctrine\DBAL\Exception\ServerException;
+use Doctrine\DBAL\Exception\DriverException;
 use Beast\Framework\Exceptions\TableGatewayException;
 
 abstract class TableGateway
@@ -48,6 +48,20 @@ abstract class TableGateway
         }
 
         $this->prototype = $prototype;
+
+        if (empty($this->table)) {
+            throw new TableGatewayException(sprintf(
+                'The property "table" must be set on class %s',
+                get_class($this)
+            ));
+        }
+
+        if (empty($this->primary)) {
+            throw new TableGatewayException(sprintf(
+                'The property "primary" must be set on class %s',
+                get_class($this)
+            ));
+        }
     }
 
     /**
@@ -111,7 +125,7 @@ abstract class TableGateway
     {
         try {
             return $this->conn->executeQuery($query->getSQL(), $query->getParameters());
-        } catch (ServerException $e) {
+        } catch (DriverException $e) {
             throw new TableGatewayException('There was error executing query', 0, $e);
         }
     }
@@ -195,8 +209,12 @@ abstract class TableGateway
      * @param QueryBuilder
      * @return string
      */
-    public function column(QueryBuilder $query): string
+    public function column(QueryBuilder $query = null): string
     {
+        if (null === $query) {
+            $query = $this->getQueryBuilder();
+        }
+
         return $this->conn->fetchColumn($query->getSQL(), $query->getParameters());
     }
 
@@ -204,9 +222,9 @@ abstract class TableGateway
      * Insert array of data returning the insert id
      *
      * @param array
-     * @return int
+     * @return string
      */
-    public function insert(array $params): int
+    public function insert(array $params): string
     {
         if ($this->conn->insert($this->table, $params)) {
             $platform = $this->conn->getDatabasePlatform();
@@ -216,7 +234,7 @@ abstract class TableGateway
             return $this->conn->lastInsertId($sequenceName);
         }
 
-        return 0;
+        return '0';
     }
 
     /**
@@ -231,7 +249,7 @@ abstract class TableGateway
 
         try {
             return $this->conn->executeUpdate($query->getSQL(), $query->getParameters());
-        } catch (ServerException $e) {
+        } catch (DriverException $e) {
             throw new TableGatewayException('There was error executing update', 0, $e);
         }
     }
