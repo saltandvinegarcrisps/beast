@@ -6,15 +6,37 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Route
 {
-    protected $path = '/';
+    use RouteTokensTrait;
+
+    public const METHOD_ANY = 'ANY';
+
+    public const METHOD_CONNECT = 'CONNECT';
+
+    public const METHOD_TRACE = 'TRACE';
+
+    public const METHOD_GET = 'GET';
+
+    public const METHOD_HEAD = 'HEAD';
+
+    public const METHOD_OPTIONS = 'OPTIONS';
+
+    public const METHOD_POST = 'POST';
+
+    public const METHOD_PUT = 'PUT';
+
+    public const METHOD_PATCH = 'PATCH';
+
+    public const METHOD_DELETE = 'DELETE';
+
+    protected $method;
+
+    protected $path;
 
     protected $controller;
 
-    protected $method = 'GET';
+    protected $params;
 
-    protected $params = [];
-
-    protected $arguments = [];
+    protected $arguments;
 
     public function __construct(string $method, string $path, $controller)
     {
@@ -22,6 +44,7 @@ class Route
         $this->setPath($path);
         $this->setController($controller);
         $this->params = [];
+        $this->arguments = [];
     }
 
     public function setArguments(array $arguments)
@@ -77,69 +100,26 @@ class Route
         return $this->method;
     }
 
-    protected function parameterise(array $matches, string $path): string
+    protected function hasMethod(ServerRequestInterface $request): bool
     {
-        $pattern = function ($token): string {
-            $map = [
-                'num' => '([0-9]+)',
-                'alpha' => '([A-Za-z]+)',
-                'alnum' => '([A-Za-z0-9]+)',
-                'slug' => '([a-zA-Z-_]+)'
-            ];
-
-            if (array_key_exists($token, $map)) {
-                return $map[$token];
-            }
-
-            // enum pattern "option1,option2"
-            if (preg_match('#"([^"]+)"#', $token, $match)) {
-                $options = implode('|', explode(',', $match[1]));
-                return '('.$options.')';
-            }
-
-            // default is to match anything
-            return '([^/]+)';
-        };
-
-        foreach ($matches[0] as $index => $search) {
-            $path = str_replace($search, $pattern($matches[3][$index]), $path);
-        }
-
-        return $path;
-    }
-
-    protected function tokenise(): array
-    {
-        $pattern = '#\{([A-z0-9\-_]+)(:([A-z0-9",\-_]+))?\}#';
-        $tokens = [];
-
-        if (preg_match_all($pattern, $this->path, $matches)) {
-            // named parameters to combine when matched with a URL
-            $tokens = $matches[1];
-
-            // path to transform
-            $path = $this->path;
-
-            // replace named parameters with valid regex
-            $path = $this->parameterise($matches, $path);
-
-            return [$path, $tokens];
-        }
-
-        return [$this->path, $tokens];
+        return $this->getMethod() === self::METHOD_ANY || $this->getMethod() === $request->getMethod();
     }
 
     public function matches(ServerRequestInterface $request): bool
     {
-        if ($this->method != 'ANY' && $this->method != $request->getMethod()) {
+        if (!$this->hasMethod($request)) {
             return false;
         }
 
         $url = $request->getUri()->getPath();
 
+        if (!$this->hasTokens()) {
+            return $url === $this->getPath();
+        }
+
         list($path, $tokens) = $this->tokenise();
 
-        if (! preg_match('#^'.$path.'$#', $url, $matches)) {
+        if (! preg_match('~^'.$path.'$~', $url, $matches)) {
             return false;
         }
 

@@ -2,9 +2,13 @@
 
 namespace Beast\Framework\Router;
 
+use Countable;
+use Iterator;
+use IteratorAggregate;
+use SplObjectStorage;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Routes
+class Routes implements Countable, IteratorAggregate
 {
     protected $routes;
 
@@ -14,7 +18,7 @@ class Routes
 
     public function __construct(array $routes = [])
     {
-        $this->routes = new \SplObjectStorage;
+        $this->routes = new SplObjectStorage;
         foreach ($routes as $route) {
             $this->append($route);
         }
@@ -22,7 +26,17 @@ class Routes
         $this->namespaces = [];
     }
 
-    protected function addOptions(array $options)
+    public function getIterator(): Iterator
+    {
+        return $this->routes;
+    }
+
+    public function count(): int
+    {
+        return $this->routes->count();
+    }
+
+    public function addOptions(array $options)
     {
         if (isset($options['prefix'])) {
             $this->segments[] = rtrim($options['prefix'], '/');
@@ -33,7 +47,7 @@ class Routes
         }
     }
 
-    protected function removeOptions(array $options)
+    public function removeOptions(array $options)
     {
         if (isset($options['prefix'])) {
             array_pop($this->segments);
@@ -53,12 +67,12 @@ class Routes
         $this->removeOptions($options);
     }
 
-    public function prefix(): string
+    public function getPrefix(): string
     {
         return implode('', $this->segments);
     }
 
-    public function namespace(): string
+    public function getNamespace(): string
     {
         return implode('', $this->namespaces) . '\\';
     }
@@ -72,21 +86,33 @@ class Routes
     {
         return new Route(
             $method,
-            $this->prefix().$path,
-            is_string($controller) ? $this->namespace().$controller : $controller
+            $this->getPrefix().$path,
+            is_string($controller) ? $this->getNamespace().$controller : $controller
         );
     }
 
     public function __call(string $method, array $args): Route
     {
-        $methods = ['any', 'get', 'head', 'post', 'put', 'delete', 'connect',
-            'options', 'trace', 'patch'];
+        $method = strtoupper($method);
 
-        if (!in_array($method, $methods)) {
-            throw new \BadMethodCallException('Method does not exist');
+        $allowed = [
+            Route::METHOD_ANY,
+            Route::METHOD_CONNECT,
+            Route::METHOD_TRACE,
+            Route::METHOD_GET,
+            Route::METHOD_HEAD,
+            Route::METHOD_OPTIONS,
+            Route::METHOD_POST,
+            Route::METHOD_PUT,
+            Route::METHOD_PATCH,
+            Route::METHOD_DELETE,
+        ];
+
+        if (!in_array($method, $allowed)) {
+            throw new \BadMethodCallException('Invalid HTTP Method: '.$method);
         }
 
-        $route = $this->create(strtoupper($method), $args[0], $args[1]);
+        $route = $this->create($method, $args[0], $args[1]);
 
         $this->append($route);
 
@@ -95,7 +121,7 @@ class Routes
 
     public function match(ServerRequestInterface $request): Route
     {
-        foreach ($this->routes as $route) {
+        foreach ($this as $route) {
             if ($route->matches($request)) {
                 return $route;
             }

@@ -36,7 +36,8 @@
     },
     "scripts": {
         "psr": [
-            "./bin/php-cs-fixer fix src/ --rules=@PSR2,no_unused_imports"
+            "./bin/php-cs-fixer fix src/ --rules=@PSR2,no_unused_imports",
+            "./bin/php-cs-fixer fix tests/ --rules=@PSR2,no_unused_imports"
         ],
         "uninstall": [
             "rm -rf ./bin",

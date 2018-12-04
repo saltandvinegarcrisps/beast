@@ -2,17 +2,25 @@
 
 namespace Beast\Framework\Support;
 
+use InvalidArgumentException;
+
 class Paths
 {
-    protected $root;
+    protected $path;
 
-    public function __construct($root)
+    public function __construct(string $path)
     {
-        $this->root = realpath($root);
+        $this->path = realpath($path);
+
+        if (false === $this->path) {
+            throw new InvalidArgumentException(
+                'Path dir not found: '.$path
+            );
+        }
     }
 
     public function resolve(string $relative): string
     {
-        return $this->root . '/' . $relative;
+        return $this->path . '/' . $relative;
     }
 }

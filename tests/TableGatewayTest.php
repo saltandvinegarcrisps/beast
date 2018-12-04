@@ -25,16 +25,14 @@ class TableGatewayTest extends TestCase
     public function testMissingTableName()
     {
         $this->expectException(TableGatewayException::class);
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $primary = 'id';
         };
     }
 
     public function testTableName()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -45,16 +43,14 @@ class TableGatewayTest extends TestCase
     public function testMissingTablePrimaryKeyName()
     {
         $this->expectException(TableGatewayException::class);
-        $$table = new class($this->conn) extends TableGateway
-        {
+        $$table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
         };
     }
 
     public function testTablePrimaryKeyName()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -64,8 +60,7 @@ class TableGatewayTest extends TestCase
 
     public function testTablePrototype()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -75,8 +70,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableConnection()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -86,8 +80,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableQueryBuilder()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -101,8 +94,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableInsert()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -117,8 +109,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableFetchException()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -129,8 +120,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableFetch()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -150,8 +140,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableGet()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -178,8 +167,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableGetUnbuffered()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -208,8 +196,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableColumn()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -225,8 +212,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableCount()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -242,8 +228,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableSum()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -259,8 +244,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableMin()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -276,8 +260,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableMax()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -298,8 +281,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableUpdateException()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -321,8 +303,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableUpdate()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
@@ -346,8 +327,7 @@ class TableGatewayTest extends TestCase
 
     public function testTableDelete()
     {
-        $table = new class($this->conn) extends TableGateway
-        {
+        $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };

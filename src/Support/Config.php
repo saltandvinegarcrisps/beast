@@ -2,6 +2,8 @@
 
 namespace Beast\Framework\Support;
 
+use InvalidArgumentException;
+
 class Config
 {
     protected $path;
@@ -9,8 +11,8 @@ class Config
     public function __construct(string $path)
     {
         if (! is_dir($path)) {
-            throw new \InvalidArgumentException(
-                'Config path not found: '.$path
+            throw new InvalidArgumentException(
+                'Config dir not found: '.$path
             );
         }
 
@@ -22,7 +24,7 @@ class Config
         $filepath = $this->path . '/' . $name . '.json';
 
         if (! is_file($filepath)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Config file not found: '.$filepath
             );
         }
@@ -32,29 +34,23 @@ class Config
 
     protected function load(string $path): array
     {
-        $json = file_get_contents($path);
+        $jsonStr = file_get_contents($path);
 
-        if (false === $json) {
-            throw new \InvalidArgumentException(
+        if (false === $jsonStr) {
+            throw new InvalidArgumentException(
                 'Failed to read file: '.$path
             );
         }
 
-        $data = json_decode($json, true);
+        $data = json_decode($jsonStr, true);
 
         if (null === $data) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'json_decode error in '.$path.': ' . json_last_error_msg()
             );
         }
 
         return $data;
-    }
-
-    protected function save(string $path, array $config): bool
-    {
-        $json = json_encode($config, JSON_PRETTY_PRINT);
-        return false !== file_put_contents($path, $json, LOCK_EX);
     }
 
     protected function parts(string $name): array
@@ -124,5 +120,11 @@ class Config
         $config[array_shift($keys)] = $value;
 
         return $this->save($path, $original);
+    }
+
+    protected function save(string $path, array $config): bool
+    {
+        $json = json_encode($config, JSON_PRETTY_PRINT);
+        return false !== file_put_contents($path, $json, LOCK_EX);
     }
 }
