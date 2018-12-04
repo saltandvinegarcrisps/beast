@@ -1,6 +1,6 @@
 <?php
 
-namespace Beast\Framework\Http;
+namespace Beast\Framework\Http\Middlewares;
 
 use Psr\Container\ContainerInterface;
 

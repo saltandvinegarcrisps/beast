@@ -5,7 +5,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Beast\Framework\Database\TableGateway;
 use Beast\Framework\Database\EntityInterface;
-use Beast\Framework\Exceptions\TableGatewayException;
+use Beast\Framework\Database\TableGatewayException;
 
 class TableGatewayTest extends TestCase
 {

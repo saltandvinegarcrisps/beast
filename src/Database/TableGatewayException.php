@@ -1,6 +1,6 @@
 <?php
 
-namespace Beast\Framework\Exceptions;
+namespace Beast\Framework\Database;
 
 use Exception;
 

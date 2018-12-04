@@ -4,8 +4,16 @@ namespace Beast\Framework\Tokens;
 
 class Generator
 {
-    public function create(int $bytes = 32): string
+    /**
+     * Create a token
+     *
+     * @param int
+     * @return string
+     */
+    public function create(int $size = 32): string
     {
-        return bin2hex(random_bytes($bytes));
+        $bytes = random_bytes($size);
+
+        return bin2hex($bytes);
     }
 }

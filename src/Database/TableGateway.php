@@ -7,7 +7,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Driver\PDOStatement;
 use Doctrine\DBAL\Exception\DriverException;
-use Beast\Framework\Exceptions\TableGatewayException;
 
 abstract class TableGateway
 {

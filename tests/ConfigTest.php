@@ -14,7 +14,10 @@ class ConfigTest extends TestCase
 
     public function setup()
     {
-        $this->path = sys_get_temp_dir();
+        $this->path = __DIR__ . '/../tmp';
+        if (!is_dir($this->path)) {
+            mkdir($this->path);
+        }
         $this->file = $this->path.'/test.json';
     }
 
