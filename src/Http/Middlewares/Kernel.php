@@ -2,59 +2,25 @@
 
 namespace Beast\Framework\Http\Middlewares;
 
-use Psr\Container\ContainerInterface;
-
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use Beast\Framework\Router\Route;
 use Beast\Framework\Router\Routes;
-
-use Beast\Framework\Support\ContainerAwareInterface;
+use Beast\Framework\Http\ResolverInterface;
 
 class Kernel implements MiddlewareInterface
 {
-    private $container;
-
     private $routes;
 
-    public function __construct(ContainerInterface $container, Routes $routes)
+    private $resolver;
+
+    public function __construct(Routes $routes, ResolverInterface $resolver)
     {
-        $this->container = $container;
         $this->routes = $routes;
-    }
-
-    private function controller(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        array $args,
-        string $controller
-    ) {
-        [$class, $method] = explode('@', $controller, 2);
-
-        $instance = $this->container->get($class);
-
-        if ($instance instanceof ContainerAwareInterface) {
-            $instance->setContainer($this->container);
-        }
-
-        return $instance->$method($request, $response, $args);
-    }
-
-    private function run(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        Route $route,
-        $callable
-    ) {
-        if (is_string($callable) && strpos($callable, '@')) {
-            return $this->controller($request, $response, $route->getParams(), $callable);
-        }
-
-        return $callable->bindTo($this->container)($request, $response, $route->getParams());
+        $this->resolver = $resolver;
     }
 
     public function process(
@@ -63,8 +29,10 @@ class Kernel implements MiddlewareInterface
     ): ResponseInterface {
         $route = $this->routes->match($request);
 
-        $callable = $route->getController();
-
-        return $this->run($request, $handler->handle($request), $route, $callable);
+        return $this->resolver->resolve(
+            $request,
+            $handler->handle($request),
+            $route
+        );
     }
 }

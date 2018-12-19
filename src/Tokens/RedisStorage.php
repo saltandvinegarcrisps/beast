@@ -28,8 +28,8 @@ class RedisStorage implements StorageInterface
         return false;
     }
 
-    public function put(string $token)
+    public function put(string $token): bool
     {
-        $this->redis->sAdd($this->channel, $token);
+        return $this->redis->sAdd($this->channel, $token) > 0;
     }
 }

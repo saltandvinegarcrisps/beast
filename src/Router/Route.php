@@ -36,27 +36,12 @@ class Route
 
     protected $params;
 
-    protected $arguments;
-
     public function __construct(string $method, string $path, $controller)
     {
         $this->setMethod($method);
         $this->setPath($path);
         $this->setController($controller);
         $this->params = [];
-        $this->arguments = [];
-    }
-
-    public function setArguments(array $arguments)
-    {
-        $this->arguments = $arguments;
-
-        return $this;
-    }
-
-    public function getArguments(): array
-    {
-        return $this->arguments;
     }
 
     public function getParams(): array

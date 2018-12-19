@@ -25,6 +25,12 @@ abstract class TableGateway
     protected $prototype;
 
     /**
+     * The class name of the model to prototype
+     * @var string
+     */
+    protected $model;
+
+    /**
      * The table name
      * @var string
      */
@@ -39,6 +45,11 @@ abstract class TableGateway
     public function __construct(Connection $conn, EntityInterface $prototype = null)
     {
         $this->conn = $conn;
+
+        // create prototype from model class name if one was set
+        if (is_string($this->model)) {
+            $prototype = new $this->model;
+        }
 
         // create anon object class to create rows from
         if ($prototype === null) {

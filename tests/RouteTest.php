@@ -17,11 +17,6 @@ class RouteTest extends TestCase
         $callback = 'callback';
         $route = new Route($method, $path, $callback);
 
-        $args = ['foo' => 'bar'];
-        $result = $route->setArguments($args);
-        $this->assertEquals($route, $result);
-        $this->assertEquals($args, $route->getArguments());
-
         $this->assertEquals($path, $route->getPath());
         $result = $route->setPath($path);
         $this->assertEquals($route, $result);

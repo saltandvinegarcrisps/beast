@@ -8,6 +8,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+use Beast\Framework\Http\Resolver;
+
 use Beast\Framework\Http\Middlewares\Kernel;
 use Beast\Framework\Support\ContainerAwareInterface;
 
@@ -18,8 +20,6 @@ class KernelTest extends TestCase
 {
     public function testProcessCallable()
     {
-        $container = $this->createMock(ContainerInterface::class);
-
         $route = $this->createMock(Route::class);
         $route->method('getController')->willReturn(function ($request, $response, $args) {
             return $response;
@@ -34,7 +34,10 @@ class KernelTest extends TestCase
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn($response);
 
-        $kernel = new Kernel($container, $routes);
+        $resolver = $this->createMock(Resolver::class);
+        $resolver->method('resolve')->willReturn($response);
+
+        $kernel = new Kernel($routes, $resolver);
         $result = $kernel->process($request, $handler);
         $this->assertInstanceOf(ResponseInterface::class, $result);
     }
@@ -70,7 +73,10 @@ class KernelTest extends TestCase
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn($response);
 
-        $kernel = new Kernel($container, $routes);
+        $resolver = $this->createMock(Resolver::class);
+        $resolver->method('resolve')->willReturn($response);
+
+        $kernel = new Kernel($routes, $resolver);
         $result = $kernel->process($request, $handler);
         $this->assertInstanceOf(ResponseInterface::class, $result);
     }
