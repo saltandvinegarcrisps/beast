@@ -20,7 +20,12 @@ trait AggregationTrait
 
         $newQuery->select(sprintf('%s(%s)', $method, $column));
 
-        return $this->column($newQuery);
+        // null or false if there are no more rows
+        if (null === $value || false === $value) {
+            return '';
+        }
+
+        return $value;
     }
 
     /**
