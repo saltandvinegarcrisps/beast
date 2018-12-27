@@ -217,9 +217,9 @@ abstract class TableGateway
      * Fetch the first column from the first row of a query
      *
      * @param QueryBuilder
-     * @return string
+     * @return mixed
      */
-    public function column(QueryBuilder $query = null): string
+    public function column(QueryBuilder $query = null)
     {
         if (null === $query) {
             $query = $this->getQueryBuilder();
