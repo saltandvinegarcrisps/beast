@@ -20,6 +20,7 @@ class TableGatewayTest extends TestCase
         ], $config);
 
         $this->conn->executeQuery('create table if not exists employees(id int, name text)');
+        $this->conn->executeQuery('create table if not exists absences(id int, employee_id int, start_date text, end_date text)');
     }
 
     public function testMissingTableName()
@@ -212,18 +213,48 @@ class TableGatewayTest extends TestCase
 
     public function testTableCount()
     {
-        $table = new class($this->conn) extends TableGateway {
+        $employees = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
             protected $primary = 'id';
         };
 
-        $table->insert([
+        $total = $employees->count();
+        $this->assertEquals('0', $total);
+
+        $employees->insert([
             'id' => 1,
             'name' => 'Bob',
         ]);
 
-        $total = $table->count();
+        $total = $employees->count();
         $this->assertEquals('1', $total);
+
+        // ---
+
+        $absences = new class($this->conn) extends TableGateway {
+            protected $table = 'absences';
+            protected $primary = 'id';
+        };
+
+        $absences->insert([
+            'id' => 1,
+            'employee_id' => 1,
+            'start_date' => '2000-01-01',
+            'end_date' => '2000-01-11',
+        ]);
+
+        $absences->insert([
+            'id' => 2,
+            'employee_id' => 1,
+            'start_date' => '2000-03-01',
+            'end_date' => '2000-03-11',
+        ]);
+
+        // ---
+
+        $query = $employees->getQueryBuilder()->join('employees', 'absences', 'a', 'a.employee_id = employees.id');
+        $total = $employees->count($query);
+        $this->assertEquals('2', $total);
     }
 
     public function testTableSum()
@@ -232,6 +263,9 @@ class TableGatewayTest extends TestCase
             protected $table = 'employees';
             protected $primary = 'id';
         };
+
+        $total = $table->sum();
+        $this->assertEquals('0', $total);
 
         $table->insert([
             'id' => 1,

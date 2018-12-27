@@ -14,9 +14,17 @@ trait AggregationTrait
      * @param QueryBuilder
      * @return string
      */
-    private function aggregate(string $method, string $column, QueryBuilder $query = null): string
+    private function aggregate(string $method, string $column = null, QueryBuilder $query = null): string
     {
         $newQuery = null === $query ? $this->getQueryBuilder() : clone $query;
+
+        if (null === $column) {
+            $column = sprintf(
+                '%s.%s',
+                $this->conn->quoteIdentifier($this->table),
+                $this->conn->quoteIdentifier($this->primary)
+            );
+        }
 
         $newQuery->select(sprintf('%s(%s)', $method, $column));
 
@@ -24,7 +32,7 @@ trait AggregationTrait
 
         // null or false if there are no more rows
         if (null === $value || false === $value) {
-            return '';
+            return '0';
         }
 
         return $value;
@@ -39,7 +47,7 @@ trait AggregationTrait
      */
     public function count(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate('count', $column ?: $this->primary, $query);
+        return $this->aggregate('count', $column, $query);
     }
 
     /**
@@ -51,7 +59,7 @@ trait AggregationTrait
      */
     public function sum(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate('sum', $column ?: $this->primary, $query);
+        return $this->aggregate('sum', $column, $query);
     }
 
     /**
@@ -63,7 +71,7 @@ trait AggregationTrait
      */
     public function min(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate('min', $column ?: $this->primary, $query);
+        return $this->aggregate('min', $column, $query);
     }
 
     /**
@@ -75,6 +83,6 @@ trait AggregationTrait
      */
     public function max(QueryBuilder $query = null, string $column = null): string
     {
-        return $this->aggregate('max', $column ?: $this->primary, $query);
+        return $this->aggregate('max', $column, $query);
     }
 }
