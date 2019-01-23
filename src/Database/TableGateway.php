@@ -5,7 +5,7 @@ namespace Beast\Framework\Database;
 use Generator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Driver\PDOStatement;
+use PDOStatement;
 use Doctrine\DBAL\Exception\DriverException;
 
 abstract class TableGateway
