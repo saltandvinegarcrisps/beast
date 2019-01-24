@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Beast\Framework\Support\Config;
+use Beast\Framework\Support\ConfigException;
 
 class ConfigTest extends TestCase
 {
@@ -49,6 +49,14 @@ class ConfigTest extends TestCase
         $this->assertNull($config->get('test.baz', null));
     }
 
+    public function testGetEnv()
+    {
+        putenv('FOOBAR=1234');
+        file_put_contents($this->file, '{"foo":"${FOOBAR}"}');
+        $config = new Config($this->path);
+        $this->assertEquals('1234', $config->get('test.foo'));
+    }
+
     public function testPut()
     {
         file_put_contents($this->file, '{}');
@@ -64,14 +72,14 @@ class ConfigTest extends TestCase
     public function testMissingDir()
     {
         $path = '/some/path/that/fails';
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ConfigException::class);
         new Config($path);
     }
 
     public function testMissingFile()
     {
         $config = new Config($this->path);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ConfigException::class);
         $config->get('fail');
     }
 
@@ -79,7 +87,7 @@ class ConfigTest extends TestCase
     {
         file_put_contents($this->file, '{');
         $config = new Config($this->path);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ConfigException::class);
         $config->get('test');
     }
 
@@ -87,7 +95,7 @@ class ConfigTest extends TestCase
     {
         file_put_contents($this->file, '{}');
         $config = new Config($this->path);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ConfigException::class);
         $config->get('');
     }
 }
