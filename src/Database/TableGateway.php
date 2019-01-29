@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Generator;
-use PDOStatement;
 
 abstract class TableGateway
 {
@@ -128,10 +127,10 @@ abstract class TableGateway
      * Execute a query against this table gateway
      *
      * @param QueryBuilder
-     * @return PDOStatement
+     * @return ResultStatement
      * @throws TableGatewayException
      */
-    protected function execute(QueryBuilder $query): PDOStatement
+    protected function execute(QueryBuilder $query)
     {
         try {
             return $this->conn->executeQuery($query->getSQL(), $query->getParameters());
