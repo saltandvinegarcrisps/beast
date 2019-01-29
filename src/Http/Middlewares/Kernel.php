@@ -2,14 +2,14 @@
 
 namespace Beast\Framework\Http\Middlewares;
 
+use Beast\Framework\Http\ResolverInterface;
+use Beast\Framework\Router\Routes;
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
-use Beast\Framework\Router\Routes;
-use Beast\Framework\Http\ResolverInterface;
 
 class Kernel implements MiddlewareInterface
 {

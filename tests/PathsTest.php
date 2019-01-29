@@ -2,19 +2,19 @@
 
 namespace Tests;
 
+use Beast\Framework\Support\Paths;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Beast\Framework\Support\Paths;
 
 class PathsTest extends TestCase
 {
-    public function testResolve()
+    public function testResolve(): void
     {
-        $paths = new Paths(sys_get_temp_dir());
-        $this->assertEquals(sys_get_temp_dir().'/foo/bar.json', $paths->resolve('foo/bar.json'));
+        $paths = new Paths(\sys_get_temp_dir());
+        $this->assertEquals(\sys_get_temp_dir().'/foo/bar.json', $paths->resolve('foo/bar.json'));
     }
 
-    public function testMissingDir()
+    public function testMissingDir(): void
     {
         $path = '/some/path/that/fails';
         $this->expectException(InvalidArgumentException::class);

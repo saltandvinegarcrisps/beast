@@ -2,9 +2,9 @@
 
 namespace Beast\Framework\Http;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Beast\Framework\Router\Route;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ResolverInterface
 {

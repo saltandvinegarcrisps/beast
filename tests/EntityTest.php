@@ -2,14 +2,14 @@
 
 namespace Tests;
 
-use ErrorException;
-use RuntimeException;
-use PHPUnit\Framework\TestCase;
 use Beast\Framework\Database\Entity;
+use ErrorException;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class EntityTest extends TestCase
 {
-    public function testEntityGet()
+    public function testEntityGet(): void
     {
         $entity = new class(['foo' => 'bar']) extends Entity {
         };
@@ -17,7 +17,7 @@ class EntityTest extends TestCase
         $this->assertEquals('bar', $entity->foo);
     }
 
-    public function testEntityIsSet()
+    public function testEntityIsSet(): void
     {
         $entity = new class(['foo' => 'bar']) extends Entity {
         };
@@ -25,7 +25,7 @@ class EntityTest extends TestCase
         $this->assertTrue(isset($entity->foo));
     }
 
-    public function testEntitySet()
+    public function testEntitySet(): void
     {
         $entity = new class() extends Entity {
         };
@@ -34,7 +34,7 @@ class EntityTest extends TestCase
         $this->assertEquals('qux', $entity->baz);
     }
 
-    public function testEntityUnset()
+    public function testEntityUnset(): void
     {
         $entity = new class(['foo' => 'bar']) extends Entity {
         };
@@ -45,7 +45,7 @@ class EntityTest extends TestCase
         $entity->foo;
     }
 
-    public function testEntityWithAttributes()
+    public function testEntityWithAttributes(): void
     {
         $entity = new class() extends Entity {
         };
@@ -55,7 +55,7 @@ class EntityTest extends TestCase
         $this->assertTrue(isset($entity->foo));
     }
 
-    public function testEntitySetAttributes()
+    public function testEntitySetAttributes(): void
     {
         $entity = new class() extends Entity {
         };
@@ -64,7 +64,7 @@ class EntityTest extends TestCase
         $this->assertTrue(isset($entity->foo));
     }
 
-    public function testEntityToArray()
+    public function testEntityToArray(): void
     {
         $entity = new class(['foo' => 'bar', 'baz' => 'qux']) extends Entity {
             protected $guarded = ['baz'];
@@ -75,7 +75,7 @@ class EntityTest extends TestCase
         $this->assertArrayHasKey('foo', $result);
     }
 
-    public function testEntityToJson()
+    public function testEntityToJson(): void
     {
         $entity = new class(['foo' => 'bar']) extends Entity {
         };
@@ -84,16 +84,16 @@ class EntityTest extends TestCase
         $this->assertEquals('{"foo":"bar"}', $result);
     }
 
-    public function testEntityToJsonException()
+    public function testEntityToJsonException(): void
     {
-        $entity = new class(['random_bytes' => random_bytes(4)]) extends Entity {
+        $entity = new class(['random_bytes' => \random_bytes(4)]) extends Entity {
         };
 
         $this->expectException(RuntimeException::class);
         $entity->toJson();
     }
 
-    public function testEntityToString()
+    public function testEntityToString(): void
     {
         $entity = new class(['foo' => 'bar']) extends Entity {
         };

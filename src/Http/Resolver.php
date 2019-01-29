@@ -2,13 +2,13 @@
 
 namespace Beast\Framework\Http;
 
-use Psr\Container\ContainerInterface;
-
-use Beast\Framework\Support\ContainerAwareInterface;
 use Beast\Framework\Router\Route;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Beast\Framework\Support\ContainerAwareInterface;
+use Psr\Container\ContainerInterface;
+
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Resolver implements ResolverInterface
 {
@@ -26,8 +26,8 @@ class Resolver implements ResolverInterface
     ): ResponseInterface {
         $controller = $route->getController();
 
-        if (is_string($controller) && strpos($controller, '@')) {
-            [$class, $method] = explode('@', $controller, 2);
+        if (\is_string($controller) && \strpos($controller, '@')) {
+            [$class, $method] = \explode('@', $controller, 2);
 
             $instance = $this->container->get($class);
 

@@ -2,12 +2,12 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
 use Beast\Framework\Tokens\RedisStorage;
+use PHPUnit\Framework\TestCase;
 
 class RedisStorageTest extends TestCase
 {
-    public function testHasToken()
+    public function testHasToken(): void
     {
         $redis = $this->createMock(\Redis::class);
         $redis->method('sIsMember')->willReturn(true);
@@ -15,7 +15,7 @@ class RedisStorageTest extends TestCase
         $this->assertTrue($storage->has('test'));
     }
 
-    public function testValidateToken()
+    public function testValidateToken(): void
     {
         $redis = $this->createMock(\Redis::class);
         $redis->method('sIsMember')->willReturn(true);
@@ -24,7 +24,7 @@ class RedisStorageTest extends TestCase
         $this->assertTrue($storage->validate('test'));
     }
 
-    public function testValidateTokenFail()
+    public function testValidateTokenFail(): void
     {
         $redis = $this->createMock(\Redis::class);
         $redis->method('sIsMember')->willReturn(false);
@@ -32,7 +32,7 @@ class RedisStorageTest extends TestCase
         $this->assertFalse($storage->validate('test'));
     }
 
-    public function testPutToken()
+    public function testPutToken(): void
     {
         $redis = $this->createMock(\Redis::class);
         $redis->method('sAdd')->willReturn(1);

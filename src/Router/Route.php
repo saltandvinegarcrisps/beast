@@ -51,7 +51,7 @@ class Route
 
     public function setPath(string $path)
     {
-        $this->path = rtrim($path, '/') ?: '/';
+        $this->path = \rtrim($path, '/') ?: '/';
 
         return $this;
     }
@@ -75,7 +75,7 @@ class Route
 
     public function setMethod($method)
     {
-        $this->method = strtoupper($method);
+        $this->method = \strtoupper($method);
 
         return $this;
     }
@@ -104,11 +104,11 @@ class Route
 
         list($path, $tokens) = $this->tokenise();
 
-        if (! preg_match('~^'.$path.'$~', $url, $matches)) {
+        if (! \preg_match('~^'.$path.'$~', $url, $matches)) {
             return false;
         }
 
-        $this->params = array_combine($tokens, array_slice($matches, 1));
+        $this->params = \array_combine($tokens, \array_slice($matches, 1));
 
         return true;
     }

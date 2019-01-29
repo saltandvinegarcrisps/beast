@@ -2,19 +2,19 @@
 
 namespace Tests;
 
+use Beast\Framework\Http\Middlewares\Csrf;
+
+use Beast\Framework\Tokens\StorageInterface;
 use PHPUnit\Framework\TestCase;
 
 use Psr\Http\Message\ResponseInterface;
+
 use Psr\Http\Message\ServerRequestInterface;
-
 use Psr\Http\Server\RequestHandlerInterface;
-
-use Beast\Framework\Http\Middlewares\Csrf;
-use Beast\Framework\Tokens\StorageInterface;
 
 class CsrfTest extends TestCase
 {
-    public function testProcessHeader()
+    public function testProcessHeader(): void
     {
         $response = $this->createMock(ResponseInterface::class);
         $storage = $this->createMock(StorageInterface::class);
@@ -29,7 +29,7 @@ class CsrfTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $result);
     }
 
-    public function testProcessBody()
+    public function testProcessBody(): void
     {
         $response = $this->createMock(ResponseInterface::class);
         $storage = $this->createMock(StorageInterface::class);

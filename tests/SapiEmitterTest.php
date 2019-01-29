@@ -2,16 +2,16 @@
 
 namespace Tests;
 
+use Beast\Framework\Http\SapiEmitter;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Beast\Framework\Http\SapiEmitter;
 
 class SapiEmitterTest extends TestCase
 {
     /**
      * @runInSeparateProcess
      */
-    public function testEmit()
+    public function testEmit(): void
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getHeaders')->willReturn(['content-type' => ['text/plain']]);

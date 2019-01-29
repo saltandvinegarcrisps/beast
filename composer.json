@@ -36,8 +36,8 @@
     },
     "scripts": {
         "psr": [
-            "./bin/php-cs-fixer fix src/ --rules=@PSR2,no_unused_imports",
-            "./bin/php-cs-fixer fix tests/ --rules=@PSR2,no_unused_imports"
+            "./bin/php-cs-fixer fix ./src --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr4",
+            "./bin/php-cs-fixer fix ./tests --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr4"
         ],
         "uninstall": [
             "rm -rf ./bin",

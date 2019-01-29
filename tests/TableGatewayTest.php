@@ -2,16 +2,16 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
-use Beast\Framework\Database\TableGateway;
 use Beast\Framework\Database\EntityInterface;
+use Beast\Framework\Database\TableGateway;
 use Beast\Framework\Database\TableGatewayException;
+use PHPUnit\Framework\TestCase;
 
 class TableGatewayTest extends TestCase
 {
     protected $conn;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = new \Doctrine\DBAL\Configuration();
 
@@ -23,7 +23,7 @@ class TableGatewayTest extends TestCase
         $this->conn->executeQuery('create table if not exists absences(id int, employee_id int, start_date text, end_date text)');
     }
 
-    public function testMissingTableName()
+    public function testMissingTableName(): void
     {
         $this->expectException(TableGatewayException::class);
         $table = new class($this->conn) extends TableGateway {
@@ -31,7 +31,7 @@ class TableGatewayTest extends TestCase
         };
     }
 
-    public function testTableName()
+    public function testTableName(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -41,7 +41,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('employees', $table->getTable());
     }
 
-    public function testMissingTablePrimaryKeyName()
+    public function testMissingTablePrimaryKeyName(): void
     {
         $this->expectException(TableGatewayException::class);
         $$table = new class($this->conn) extends TableGateway {
@@ -49,7 +49,7 @@ class TableGatewayTest extends TestCase
         };
     }
 
-    public function testTablePrimaryKeyName()
+    public function testTablePrimaryKeyName(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -59,7 +59,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('id', $table->getPrimary());
     }
 
-    public function testTablePrototype()
+    public function testTablePrototype(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -69,7 +69,7 @@ class TableGatewayTest extends TestCase
         $this->assertTrue($table->getPrototype() instanceof EntityInterface);
     }
 
-    public function testTableConnection()
+    public function testTableConnection(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -79,7 +79,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals($this->conn, $table->getConnection());
     }
 
-    public function testTableQueryBuilder()
+    public function testTableQueryBuilder(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -93,7 +93,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('employees', $qb->getQueryPart('from')[0]['table']);
     }
 
-    public function testTableInsert()
+    public function testTableInsert(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -108,7 +108,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
-    public function testTableFetchException()
+    public function testTableFetchException(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -119,7 +119,7 @@ class TableGatewayTest extends TestCase
         $table->fetch($table->getQueryBuilder()->select('fail()'));
     }
 
-    public function testTableFetch()
+    public function testTableFetch(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -139,7 +139,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('Bob', $model->name);
     }
 
-    public function testTableGet()
+    public function testTableGet(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -166,7 +166,7 @@ class TableGatewayTest extends TestCase
         $this->assertCount(2, $results);
     }
 
-    public function testTableGetUnbuffered()
+    public function testTableGetUnbuffered(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -195,7 +195,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('Steve', $results->current()->name);
     }
 
-    public function testTableColumn()
+    public function testTableColumn(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -211,7 +211,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('1', $id);
     }
 
-    public function testTableCount()
+    public function testTableCount(): void
     {
         $employees = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -257,7 +257,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('2', $total);
     }
 
-    public function testTableSum()
+    public function testTableSum(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -276,7 +276,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('1', $total);
     }
 
-    public function testTableMin()
+    public function testTableMin(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -292,7 +292,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('1', $total);
     }
 
-    public function testTableMax()
+    public function testTableMax(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -313,7 +313,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('2', $total);
     }
 
-    public function testTableUpdateException()
+    public function testTableUpdateException(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -335,7 +335,7 @@ class TableGatewayTest extends TestCase
         $table->update($query);
     }
 
-    public function testTableUpdate()
+    public function testTableUpdate(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';
@@ -359,7 +359,7 @@ class TableGatewayTest extends TestCase
         $this->assertEquals('Sharon', $name);
     }
 
-    public function testTableDelete()
+    public function testTableDelete(): void
     {
         $table = new class($this->conn) extends TableGateway {
             protected $table = 'employees';

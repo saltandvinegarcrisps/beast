@@ -18,25 +18,25 @@ abstract class Entity implements EntityInterface
 
     public function __get(string $key)
     {
-        if (!array_key_exists($key, $this->attributes)) {
-            throw new ErrorException(sprintf('Undefined attribute "%s" on %s', $key, get_class($this)));
+        if (!\array_key_exists($key, $this->attributes)) {
+            throw new ErrorException(\sprintf('Undefined attribute "%s" on %s', $key, \get_class($this)));
         }
         return $this->attributes[$key];
     }
 
-    public function __set(string $key, $value)
+    public function __set(string $key, $value): void
     {
         $this->attributes[$key] = $value;
     }
 
     public function __isset(string $key)
     {
-        return array_key_exists($key, $this->attributes);
+        return \array_key_exists($key, $this->attributes);
     }
 
-    public function __unset(string $key)
+    public function __unset(string $key): void
     {
-        if (array_key_exists($key, $this->attributes)) {
+        if (\array_key_exists($key, $this->attributes)) {
             unset($this->attributes[$key]);
         }
     }
@@ -60,16 +60,16 @@ abstract class Entity implements EntityInterface
 
     public function toArray(): array
     {
-        return array_diff_key($this->getAttributes(), array_flip($this->guarded));
+        return \array_diff_key($this->getAttributes(), \array_flip($this->guarded));
     }
 
     public function toJson(): string
     {
-        $encoded = json_encode($this->toArray());
+        $encoded = \json_encode($this->toArray());
 
         if (false === $encoded) {
             throw new RuntimeException(
-                'json_encode error: ' . json_last_error_msg()
+                'json_encode error: ' . \json_last_error_msg()
             );
         }
 

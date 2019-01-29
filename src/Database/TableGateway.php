@@ -2,11 +2,11 @@
 
 namespace Beast\Framework\Database;
 
-use Generator;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
-use PDOStatement;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Generator;
+use PDOStatement;
 
 abstract class TableGateway
 {
@@ -47,7 +47,7 @@ abstract class TableGateway
         $this->conn = $conn;
 
         // create prototype from model class name if one was set
-        if (is_string($this->model)) {
+        if (\is_string($this->model)) {
             $prototype = new $this->model;
         }
 
@@ -60,16 +60,16 @@ abstract class TableGateway
         $this->prototype = $prototype;
 
         if (empty($this->table)) {
-            throw new TableGatewayException(sprintf(
+            throw new TableGatewayException(\sprintf(
                 'The property "table" must be set on class %s',
-                get_class($this)
+                \get_class($this)
             ));
         }
 
         if (empty($this->primary)) {
-            throw new TableGatewayException(sprintf(
+            throw new TableGatewayException(\sprintf(
                 'The property "primary" must be set on class %s',
-                get_class($this)
+                \get_class($this)
             ));
         }
     }

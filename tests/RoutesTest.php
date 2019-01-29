@@ -3,23 +3,23 @@
 namespace Tests;
 
 use BadMethodCallException;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 use Beast\Framework\Router\Route;
 use Beast\Framework\Router\RouteNotFoundException;
 use Beast\Framework\Router\Routes;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 class RoutesTest extends TestCase
 {
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $route = $this->createMock(Route::class);
         $routes = new Routes([$route]);
         $this->assertCount(1, $routes);
     }
 
-    public function testOptions()
+    public function testOptions(): void
     {
         $routes = new Routes();
         $options = [
@@ -35,7 +35,7 @@ class RoutesTest extends TestCase
         $this->assertEquals('', $routes->getPrefix());
     }
 
-    public function testGroups()
+    public function testGroups(): void
     {
         $route = $this->createMock(Route::class);
         $routes = new Routes([$route]);
@@ -43,21 +43,21 @@ class RoutesTest extends TestCase
         $routes->group([
             'namespace' => 'foo',
             'prefix' => 'bar',
-        ], function (Routes $r) use ($routes) {
+        ], function (Routes $r) use ($routes): void {
             $this->assertEquals($routes, $r);
             $this->assertEquals('\\foo\\', $routes->getNamespace());
             $this->assertEquals('bar', $routes->getPrefix());
         });
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $routes = new Routes();
         $route = $routes->create(Route::METHOD_GET, '/', 'callback');
         $this->assertInstanceof(Route::class, $route);
     }
 
-    public function testCreateByMethod()
+    public function testCreateByMethod(): void
     {
         $routes = new Routes();
         $route = $routes->any('/', 'callback');
@@ -110,7 +110,7 @@ class RoutesTest extends TestCase
         $this->assertCount(1, $routes);
     }
 
-    public function testCreateByMethodFailure()
+    public function testCreateByMethodFailure(): void
     {
         $routes = new Routes();
 
@@ -118,7 +118,7 @@ class RoutesTest extends TestCase
         $routes->fail('/', 'callback');
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $routes = new Routes();
         $route = $routes->get('/', 'callback');
@@ -134,7 +134,7 @@ class RoutesTest extends TestCase
         $this->assertEquals($route, $result);
     }
 
-    public function testMatchNotFound()
+    public function testMatchNotFound(): void
     {
         $routes = new Routes();
 

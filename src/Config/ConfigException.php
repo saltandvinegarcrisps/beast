@@ -1,6 +1,6 @@
 <?php
 
-namespace Beast\Framework\Support;
+namespace Beast\Framework\Config;
 
 class ConfigException extends \ErrorException
 {

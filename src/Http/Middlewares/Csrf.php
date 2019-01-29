@@ -2,15 +2,15 @@
 
 namespace Beast\Framework\Http\Middlewares;
 
-use InvalidArgumentException;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
 use Beast\Framework\Tokens\StorageInterface;
+
+use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
+
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Csrf implements MiddlewareInterface
 {
@@ -36,7 +36,7 @@ class Csrf implements MiddlewareInterface
 
     protected function isMethod(ServerRequestInterface $request): bool
     {
-        return in_array($request->getMethod(), [
+        return \in_array($request->getMethod(), [
             'POST',
             'PUT',
             'PATCH',
@@ -62,7 +62,7 @@ class Csrf implements MiddlewareInterface
             return $input[$this->inputFieldName];
         }
 
-        throw new InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(\sprintf(
             'Csrf token not found in %s header or %s body',
             $this->headerFieldName,
             $this->inputFieldName

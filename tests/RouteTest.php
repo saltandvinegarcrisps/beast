@@ -2,15 +2,15 @@
 
 namespace Tests;
 
-use RuntimeException;
+use Beast\Framework\Router\Route;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Beast\Framework\Router\Route;
+use RuntimeException;
 
 class RouteTest extends TestCase
 {
-    public function testGettersSetters()
+    public function testGettersSetters(): void
     {
         $method = 'GET';
         $path = '/';
@@ -30,7 +30,7 @@ class RouteTest extends TestCase
         $this->assertEquals($route, $result);
     }
 
-    public function testSimpleMatch()
+    public function testSimpleMatch(): void
     {
         $method = 'GET';
         $path = '/';
@@ -48,7 +48,7 @@ class RouteTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testNoMatchMethod()
+    public function testNoMatchMethod(): void
     {
         $method = 'GET';
         $path = '/';
@@ -66,7 +66,7 @@ class RouteTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testNoMatch()
+    public function testNoMatch(): void
     {
         $method = 'GET';
         $path = '/';
@@ -84,7 +84,7 @@ class RouteTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testTokenMatch()
+    public function testTokenMatch(): void
     {
         $method = 'GET';
         $path = '/token/{token}';
@@ -105,7 +105,7 @@ class RouteTest extends TestCase
         ], $route->getParams());
     }
 
-    public function testTokenMatchFailure()
+    public function testTokenMatchFailure(): void
     {
         $method = 'GET';
         $path = '/token/{token';
@@ -123,7 +123,7 @@ class RouteTest extends TestCase
         $route->matches($request);
     }
 
-    public function testTypedTokenMatch()
+    public function testTypedTokenMatch(): void
     {
         $method = 'GET';
         $path = '/num/{num:num}/alpha/{alpha:alpha}/alnum/{alnum:alnum}/slug/{slug:slug}';
@@ -147,7 +147,7 @@ class RouteTest extends TestCase
         ], $route->getParams());
     }
 
-    public function testEnumTokenMatch()
+    public function testEnumTokenMatch(): void
     {
         $method = 'GET';
         $path = '/enum/{enum:"foo,bar"}';

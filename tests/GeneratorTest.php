@@ -2,15 +2,15 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
 use Beast\Framework\Tokens\Generator;
+use PHPUnit\Framework\TestCase;
 
 class GeneratorTest extends TestCase
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         $generator = new Generator;
         $result = $generator->create();
-        $this->assertEquals(64, strlen($result));
+        $this->assertEquals(64, \strlen($result));
     }
 }
