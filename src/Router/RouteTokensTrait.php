@@ -22,7 +22,6 @@ trait RouteTokensTrait
     protected function tokenise(): array
     {
         $pattern = '~\{([A-z0-9\-_]+)(:([A-z0-9",\-_]+))?\}~';
-        $tokens = [];
 
         if (\preg_match_all($pattern, $this->getPath(), $matches)) {
             // named parameters to combine when matched with a URL
