@@ -6,6 +6,8 @@ use RuntimeException;
 
 trait RouteTokensTrait
 {
+    abstract public function getPath(): string;
+
     protected function hasTokens(): bool
     {
         $path = $this->getPath();

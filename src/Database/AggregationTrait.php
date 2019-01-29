@@ -7,6 +7,21 @@ use Doctrine\DBAL\Query\QueryBuilder;
 trait AggregationTrait
 {
     /**
+     * Get this table gateway query builder
+     *
+     * @return QueryBuilder
+     */
+    abstract public function getQueryBuilder(): QueryBuilder;
+
+    /**
+     * Fetch the first column from the first row of a query
+     *
+     * @param QueryBuilder
+     * @return mixed
+     */
+    abstract public function column(QueryBuilder $query = null);
+
+    /**
      * Run a aggregate function against a column
      *
      * @param string

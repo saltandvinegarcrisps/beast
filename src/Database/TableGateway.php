@@ -47,7 +47,7 @@ abstract class TableGateway
         $this->conn = $conn;
 
         // create prototype from model class name if one was set
-        if (\is_string($this->model)) {
+        if ($this->model) {
             $prototype = new $this->model;
         }
 
