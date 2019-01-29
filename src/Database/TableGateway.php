@@ -127,7 +127,7 @@ abstract class TableGateway
      * Execute a query against this table gateway
      *
      * @param QueryBuilder
-     * @return ResultStatement
+     * @return mixed
      * @throws TableGatewayException
      */
     protected function execute(QueryBuilder $query)
