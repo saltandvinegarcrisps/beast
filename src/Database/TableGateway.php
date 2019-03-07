@@ -110,6 +110,12 @@ abstract class TableGateway
      */
     public function getConnection(): Connection
     {
+        // check connection before running queries
+        if ($this->conn->isConnected() && !$this->conn->ping()) {
+            $this->conn->close();
+            $this->conn->connect();
+        }
+
         return $this->conn;
     }
 
@@ -120,7 +126,7 @@ abstract class TableGateway
      */
     public function getQueryBuilder(): QueryBuilder
     {
-        return $this->conn->createQueryBuilder()->select('*')->from($this->table);
+        return $this->getConnection()->createQueryBuilder()->select('*')->from($this->table);
     }
 
     /**
@@ -133,7 +139,7 @@ abstract class TableGateway
     protected function execute(QueryBuilder $query)
     {
         try {
-            return $this->conn->executeQuery($query->getSQL(), $query->getParameters());
+            return $this->getConnection()->executeQuery($query->getSQL(), $query->getParameters());
         } catch (DriverException $e) {
             throw new TableGatewayException('There was error executing query', 0, $e);
         }
@@ -224,7 +230,7 @@ abstract class TableGateway
             $query = $this->getQueryBuilder();
         }
 
-        return $this->conn->fetchColumn($query->getSQL(), $query->getParameters());
+        return $this->getConnection()->fetchColumn($query->getSQL(), $query->getParameters());
     }
 
     /**
@@ -235,12 +241,12 @@ abstract class TableGateway
      */
     public function insert(array $params): string
     {
-        if ($this->conn->insert($this->table, $params)) {
-            $platform = $this->conn->getDatabasePlatform();
+        if ($this->getConnection()->insert($this->table, $params)) {
+            $platform = $this->getConnection()->getDatabasePlatform();
             $sequenceName = $platform->supportsSequences() ?
                 $platform->getIdentitySequenceName($this->table, $this->primary) :
                 null;
-            return $this->conn->lastInsertId($sequenceName);
+            return $this->getConnection()->lastInsertId($sequenceName);
         }
 
         return '0';
@@ -257,7 +263,7 @@ abstract class TableGateway
         $query->update($this->table);
 
         try {
-            return $this->conn->executeUpdate($query->getSQL(), $query->getParameters());
+            return $this->getConnection()->executeUpdate($query->getSQL(), $query->getParameters());
         } catch (DriverException $e) {
             throw new TableGatewayException('There was error executing update', 0, $e);
         }

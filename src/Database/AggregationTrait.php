@@ -36,8 +36,8 @@ trait AggregationTrait
         if (null === $column) {
             $column = \sprintf(
                 '%s.%s',
-                $this->conn->quoteIdentifier($this->table),
-                $this->conn->quoteIdentifier($this->primary)
+                $this->getConnection()->quoteIdentifier($this->table),
+                $this->getConnection()->quoteIdentifier($this->primary)
             );
         }
 
