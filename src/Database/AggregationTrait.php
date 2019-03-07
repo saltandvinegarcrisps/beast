@@ -2,10 +2,18 @@
 
 namespace Beast\Framework\Database;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 trait AggregationTrait
 {
+    /**
+     * Get active database connection
+     *
+     * @return Connection
+     */
+    abstract public function getConnection(): Connection;
+
     /**
      * Get this table gateway query builder
      *

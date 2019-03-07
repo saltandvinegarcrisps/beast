@@ -104,7 +104,7 @@ abstract class TableGateway
     }
 
     /**
-     * Get database connection
+     * Get active database connection
      *
      * @return Connection
      */
@@ -113,6 +113,9 @@ abstract class TableGateway
         // check connection before running queries
         if ($this->conn->isConnected() && !$this->conn->ping()) {
             $this->conn->close();
+        }
+
+        if (!$this->conn->isConnected()) {
             $this->conn->connect();
         }
 
