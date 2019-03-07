@@ -110,15 +110,6 @@ abstract class TableGateway
      */
     public function getConnection(): Connection
     {
-        // check connection before running queries
-        if ($this->conn->isConnected() && !$this->conn->ping()) {
-            $this->conn->close();
-        }
-
-        if (!$this->conn->isConnected()) {
-            $this->conn->connect();
-        }
-
         return $this->conn;
     }
 
