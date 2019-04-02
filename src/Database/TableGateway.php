@@ -172,6 +172,40 @@ abstract class TableGateway
     }
 
     /**
+     * Get memory limit in bytes
+     *
+     * @return int
+     */
+    protected function getMemoryLimit(): int
+    {
+        $limit = \ini_get('memory_limit');
+        if ($limit === '-1' || empty($limit)) {
+            return PHP_INT_MAX;
+        }
+        return $this->toBytes($limit);
+    }
+
+    /**
+     * Convert binary size string (512M) into bytes
+     *
+     * @param string
+     * @return int
+     */
+    protected function toBytes(string $string): int
+    {
+        \sscanf($string, '%u%c', $number, $suffix);
+
+        if (isset($suffix)) {
+            $exp = \strpos(' KMG', \strtoupper($suffix));
+            if (false !== $exp) {
+                $number = $number * \pow(1024, $exp);
+            }
+        }
+
+        return $number;
+    }
+
+    /**
      * Get array of entities from the query
      *
      * @param QueryBuilder|null
@@ -186,8 +220,18 @@ abstract class TableGateway
         $statement = $this->execute($query);
         $results = [];
 
+        // when buffering results into array
+        // check memory usage to prevent fatal error
+        $limit = $this->getMemoryLimit();
+        $current = \memory_get_usage();
+        $max = $limit - $current;
+
         foreach ($statement as $row) {
             $results[] = $this->model($row);
+            $usage = \memory_get_usage();
+            if ($usage > $max) {
+                throw new \OverflowException(\sprintf('Allowed memory size of %s bytes has been exceeded', $max));
+            }
         }
 
         return $results;
