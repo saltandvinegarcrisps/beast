@@ -2,12 +2,34 @@
 
 namespace Beast\Framework\Router;
 
+use BadMethodCallException;
 use Countable;
 use Iterator;
 use IteratorAggregate;
 use Psr\Http\Message\ServerRequestInterface;
 use SplObjectStorage;
+use function array_pop;
+use function implode;
+use function in_array;
+use function is_string;
+use function rtrim;
+use function strtoupper;
 
+/**
+ * Class Routes
+ *
+ * @package Beast\Framework\Router
+ * @method Route any(string $method, array $args)
+ * @method Route connect(string $method, array $args)
+ * @method Route trace(string $method, array $args)
+ * @method Route get(string $method, array $args)
+ * @method Route head(string $method, array $args)
+ * @method Route options(string $method, array $args)
+ * @method Route post(string $method, array $args)
+ * @method Route put(string $method, array $args)
+ * @method Route patch(string $method, array $args)
+ * @method Route delete(string $method, array $args)
+ */
 class Routes implements Countable, IteratorAggregate
 {
     protected $routes;
@@ -39,7 +61,7 @@ class Routes implements Countable, IteratorAggregate
     public function addOptions(array $options): void
     {
         if (isset($options['prefix'])) {
-            $this->segments[] = \rtrim($options['prefix'], '/');
+            $this->segments[] = rtrim($options['prefix'], '/');
         }
 
         if (isset($options['namespace'])) {
@@ -50,11 +72,11 @@ class Routes implements Countable, IteratorAggregate
     public function removeOptions(array $options): void
     {
         if (isset($options['prefix'])) {
-            \array_pop($this->segments);
+            array_pop($this->segments);
         }
 
         if (isset($options['namespace'])) {
-            \array_pop($this->namespaces);
+            array_pop($this->namespaces);
         }
     }
 
@@ -69,12 +91,12 @@ class Routes implements Countable, IteratorAggregate
 
     public function getPrefix(): string
     {
-        return \implode('', $this->segments);
+        return implode('', $this->segments);
     }
 
     public function getNamespace(): string
     {
-        return \implode('', $this->namespaces) . '\\';
+        return implode('', $this->namespaces) . '\\';
     }
 
     public function append(Route $route): void
@@ -87,13 +109,13 @@ class Routes implements Countable, IteratorAggregate
         return new Route(
             $method,
             $this->getPrefix().$path,
-            \is_string($controller) ? $this->getNamespace().$controller : $controller
+            is_string($controller) ? $this->getNamespace().$controller : $controller
         );
     }
 
     public function __call(string $method, array $args): Route
     {
-        $method = \strtoupper($method);
+        $method = strtoupper($method);
 
         $allowed = [
             Route::METHOD_ANY,
@@ -108,8 +130,8 @@ class Routes implements Countable, IteratorAggregate
             Route::METHOD_DELETE,
         ];
 
-        if (!\in_array($method, $allowed)) {
-            throw new \BadMethodCallException('Invalid HTTP Method: '.$method);
+        if (!in_array($method, $allowed, true)) {
+            throw new BadMethodCallException('Invalid HTTP Method: '.$method);
         }
 
         $route = $this->create($method, $args[0], $args[1]);
