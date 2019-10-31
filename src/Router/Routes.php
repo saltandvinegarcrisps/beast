@@ -3,6 +3,7 @@
 namespace Beast\Framework\Router;
 
 use BadMethodCallException;
+use Closure;
 use Countable;
 use Iterator;
 use IteratorAggregate;
@@ -19,16 +20,16 @@ use function strtoupper;
  * Class Routes
  *
  * @package Beast\Framework\Router
- * @method Route any(string $method, array $args)
- * @method Route connect(string $method, array $args)
- * @method Route trace(string $method, array $args)
- * @method Route get(string $method, array $args)
- * @method Route head(string $method, array $args)
- * @method Route options(string $method, array $args)
- * @method Route post(string $method, array $args)
- * @method Route put(string $method, array $args)
- * @method Route patch(string $method, array $args)
- * @method Route delete(string $method, array $args)
+ * @method Route any(string $path, array|Closure|string $args)
+ * @method Route connect(string $path, array|Closure|string $args)
+ * @method Route trace(string $path, array|Closure|string $args)
+ * @method Route get(string $path, array|Closure|string $args)
+ * @method Route head(string $path, array|Closure|string $args)
+ * @method Route options(string $path, array|Closure|string $args)
+ * @method Route post(string $path, array|Closure|string $args)
+ * @method Route put(string $path, array|Closure|string $args)
+ * @method Route patch(string $path, array|Closure|string $args)
+ * @method Route delete(string $path, array|Closure|string $args)
  */
 class Routes implements Countable, IteratorAggregate
 {
