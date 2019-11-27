@@ -196,4 +196,25 @@ class RouteTest extends TestCase
         $result = $route->matches($request);
         $this->assertFalse($result);
     }
+
+    public function testWildcardTokenMatch(): void
+    {
+        $method = 'GET';
+        $path = '/{path:*}';
+        $callback = 'callback';
+        $route = new Route($method, $path, $callback);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getMethod')->willReturn('GET');
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->method('getPath')->willReturn('/once/upon/a/time/in/devland');
+        $request->method('getUri')->willReturn($uri);
+
+        $result = $route->matches($request);
+        $this->assertTrue($result);
+        $this->assertEquals([
+            'path' => 'once/upon/a/time/in/devland',
+        ], $route->getParams());
+    }
 }
