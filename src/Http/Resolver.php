@@ -28,6 +28,17 @@ class Resolver implements ResolverInterface
     ): ResponseInterface {
         $controller = $route->getController();
 
+        // Single Action Controllers (Invokable Controllers)
+        if (is_string($controller) && class_exists($controller)) {
+            $instance = $this->container->get($controller);
+
+            if ($instance instanceof ContainerAwareInterface) {
+                $instance->setContainer($this->container);
+            }
+
+            return $instance($request, $response, $route->getParams());
+        }
+
         if (\is_array($controller) && \count($controller) === 2) {
             [$class, $method] = $controller;
 
