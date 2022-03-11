@@ -36,6 +36,8 @@ class Route
 
     protected $params;
 
+    protected $middlewares;
+
     public function __construct(string $method, string $path, $controller)
     {
         $this->setMethod($method);
@@ -111,5 +113,23 @@ class Route
         $this->params = \array_combine($tokens, \array_slice($matches, 1));
 
         return true;
+    }
+
+    /**
+     * Add middleware to only this route
+     *
+     * @param class-string $middleware
+     * @return $this
+     */
+    public function setMiddleware(string $middleware): self
+    {
+        $this->middlewares[] = $middleware;
+
+        return $this;
+    }
+
+    public function getMiddleware(): array
+    {
+        return $this->middlewares;
     }
 }
