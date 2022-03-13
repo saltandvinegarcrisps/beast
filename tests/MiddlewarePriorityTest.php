@@ -18,7 +18,7 @@ class MiddlewarePriorityTest extends TestCase
 	public function dataProvider(): array
 	{
 		return [
-			'Orders correctly if all items are present in the data array' => [
+			'Orders correctly if all items are present in the priority array' => [
 				['cat', 'pig', 'dog'],
 				['cat', 'pig', 'dog'],
 				['dog', 'cat', 'pig'],
