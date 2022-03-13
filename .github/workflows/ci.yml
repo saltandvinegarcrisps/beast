@@ -20,4 +20,4 @@ jobs:
       - name: PHPUnit tests
         uses: php-actions/phpunit@v3
         with:
-          configuration: /home/runner/work/beast/beast/phpunit.xml
+          php_version: 7.4
