@@ -19,3 +19,5 @@ jobs:
     steps:
       - name: PHPUnit tests
         uses: php-actions/phpunit@v3
+        with:
+          configuration: phpunit.xml
