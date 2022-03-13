@@ -59,14 +59,14 @@ abstract class TableGateway
         $this->prototype = $prototype;
 
         if (empty($this->table)) {
-            throw new TableGatewayException(\sprintf(
+            throw new TableGatewayException(sprintf(
                 'The property "table" must be set on class %s',
                 \get_class($this)
             ));
         }
 
         if (empty($this->primary)) {
-            throw new TableGatewayException(\sprintf(
+            throw new TableGatewayException(sprintf(
                 'The property "primary" must be set on class %s',
                 \get_class($this)
             ));
@@ -193,12 +193,12 @@ abstract class TableGateway
      */
     protected function toBytes(string $string): int
     {
-        \sscanf($string, '%u%c', $number, $suffix);
+        sscanf($string, '%u%c', $number, $suffix);
 
         if (isset($suffix)) {
-            $exp = \strpos(' KMG', \strtoupper($suffix));
+            $exp = strpos(' KMG', strtoupper($suffix));
             if (false !== $exp) {
-                $number = $number * \pow(1024, $exp);
+                $number = $number * pow(1024, $exp);
             }
         }
 
@@ -223,14 +223,14 @@ abstract class TableGateway
         // when buffering results into array
         // check memory usage to prevent fatal error
         $limit = $this->getMemoryLimit();
-        $current = \memory_get_usage();
+        $current = memory_get_usage();
         $max = $limit - $current;
 
         foreach ($statement as $row) {
             $results[] = $this->model($row);
-            $usage = \memory_get_usage();
+            $usage = memory_get_usage();
             if ($usage > $max) {
-                throw new \OverflowException(\sprintf('Allowed memory size of %s bytes has been exceeded', $max));
+                throw new \OverflowException(sprintf('Allowed memory size of %s bytes has been exceeded', $max));
             }
         }
 

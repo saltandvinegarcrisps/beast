@@ -86,7 +86,7 @@ class EntityTest extends TestCase
 
     public function testEntityToJsonException(): void
     {
-        $entity = new class(['random_bytes' => \random_bytes(4)]) extends Entity {
+        $entity = new class(['random_bytes' => random_bytes(4)]) extends Entity {
         };
 
         $this->expectException(RuntimeException::class);

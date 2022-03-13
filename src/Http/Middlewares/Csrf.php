@@ -62,7 +62,7 @@ class Csrf implements MiddlewareInterface
             return $input[$this->inputFieldName];
         }
 
-        throw new InvalidArgumentException(\sprintf(
+        throw new InvalidArgumentException(sprintf(
             'Csrf token not found in %s header or %s body',
             $this->headerFieldName,
             $this->inputFieldName

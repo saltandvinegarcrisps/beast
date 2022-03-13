@@ -10,7 +10,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
 
     public function __construct(string $path)
     {
-        $this->path = \realpath($path);
+        $this->path = realpath($path);
 
         if (false === $this->path) {
             throw new ConfigException(
@@ -29,7 +29,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     {
         $filepath = $this->path . '/' . $name . $this->extension;
 
-        if (!\is_file($filepath)) {
+        if (!is_file($filepath)) {
             return null;
         }
 
@@ -58,7 +58,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
             );
         }
 
-        $keys = \explode('.', $name);
+        $keys = explode('.', $name);
 
         if (empty($keys)) {
             throw new ConfigException(
@@ -66,7 +66,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
             );
         }
 
-        $file = \array_shift($keys);
+        $file = array_shift($keys);
 
         if (!$file) {
             throw new ConfigException(

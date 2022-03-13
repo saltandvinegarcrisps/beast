@@ -42,14 +42,14 @@ trait AggregationTrait
         $newQuery = null === $query ? $this->getQueryBuilder() : clone $query;
 
         if (null === $column) {
-            $column = \sprintf(
+            $column = sprintf(
                 '%s.%s',
                 $this->getConnection()->quoteIdentifier($this->table),
                 $this->getConnection()->quoteIdentifier($this->primary)
             );
         }
 
-        $newQuery->select(\sprintf('%s(%s)', $method, $column));
+        $newQuery->select(sprintf('%s(%s)', $method, $column));
 
         $value = $this->column($newQuery);
 

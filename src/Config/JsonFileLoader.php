@@ -17,7 +17,7 @@ class JsonFileLoader extends AbstractFileLoader
             return null;
         }
 
-        $jsonStr = \file_get_contents($path);
+        $jsonStr = file_get_contents($path);
 
         if (false === $jsonStr) {
             throw new ConfigException(
@@ -25,11 +25,11 @@ class JsonFileLoader extends AbstractFileLoader
             );
         }
 
-        $data = \json_decode($jsonStr, true);
+        $data = json_decode($jsonStr, true);
 
         if (null === $data) {
             throw new ConfigException(
-                'json_decode error in '.$path.': ' . \json_last_error_msg()
+                'json_decode error in '.$path.': ' . json_last_error_msg()
             );
         }
 

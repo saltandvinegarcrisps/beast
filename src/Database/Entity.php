@@ -19,7 +19,7 @@ abstract class Entity implements EntityInterface
     public function __get(string $key)
     {
         if (!\array_key_exists($key, $this->attributes)) {
-            throw new ErrorException(\sprintf('Undefined attribute "%s" on %s', $key, \get_class($this)));
+            throw new ErrorException(sprintf('Undefined attribute "%s" on %s', $key, \get_class($this)));
         }
         return $this->attributes[$key];
     }
@@ -60,16 +60,16 @@ abstract class Entity implements EntityInterface
 
     public function toArray(): array
     {
-        return \array_diff_key($this->getAttributes(), \array_flip($this->guarded));
+        return array_diff_key($this->getAttributes(), array_flip($this->guarded));
     }
 
     public function toJson(): string
     {
-        $encoded = \json_encode($this->toArray());
+        $encoded = json_encode($this->toArray());
 
         if (false === $encoded) {
             throw new RuntimeException(
-                'json_encode error: ' . \json_last_error_msg()
+                'json_encode error: ' . json_last_error_msg()
             );
         }
 

@@ -53,14 +53,14 @@ class Routes implements Countable, IteratorAggregate
     public function addOptions(array $options): void
     {
         if (isset($options['prefix'])) {
-            $this->segments[] = \rtrim($options['prefix'], '/');
+            $this->segments[] = rtrim($options['prefix'], '/');
         }
     }
 
     public function removeOptions(array $options): void
     {
         if (isset($options['prefix'])) {
-            \array_pop($this->segments);
+            array_pop($this->segments);
         }
     }
 
@@ -75,7 +75,7 @@ class Routes implements Countable, IteratorAggregate
 
     public function getPrefix(): string
     {
-        return \implode('', $this->segments);
+        return implode('', $this->segments);
     }
 
     public function append(Route $route): void
@@ -85,7 +85,7 @@ class Routes implements Countable, IteratorAggregate
 
     /**
      * Create a new Route Definition
-     * 
+     *
      * @param  string $method
      * @param  string $path
      * @param  array|Closure|class-string $controller
@@ -102,7 +102,7 @@ class Routes implements Countable, IteratorAggregate
 
     public function __call(string $method, array $args): Route
     {
-        $method = \strtoupper($method);
+        $method = strtoupper($method);
 
         $allowed = [
             Route::METHOD_ANY,

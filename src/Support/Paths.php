@@ -10,7 +10,7 @@ class Paths
 
     public function __construct(string $path)
     {
-        $this->path = \realpath($path);
+        $this->path = realpath($path);
 
         if (false === $this->path) {
             throw new InvalidArgumentException(

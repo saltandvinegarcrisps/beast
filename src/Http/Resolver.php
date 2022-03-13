@@ -29,7 +29,7 @@ class Resolver implements ResolverInterface
         $controller = $route->getController();
 
         // Single Action Controllers (Invokable Controllers)
-        if (\is_string($controller) && \class_exists($controller)) {
+        if (\is_string($controller) && class_exists($controller)) {
             $instance = $this->container->get($controller);
 
             if ($instance instanceof ContainerAwareInterface) {

@@ -11,17 +11,17 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": "^7.3 || ^8.0",
         "doctrine/dbal": "^2",
         "psr/container": "^2",
         "psr/http-message": "^1",
         "psr/http-server-middleware": "^1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2",
+        "friendsofphp/php-cs-fixer": "^3",
         "phpstan/phpstan": "^1",
         "phpunit/phpunit": "^9",
-        "symfony/var-dumper": "^4"
+        "symfony/var-dumper": "^6"
     },
     "autoload": {
         "psr-4": {
@@ -41,8 +41,8 @@
     },
     "scripts": {
         "psr": [
-            "./bin/php-cs-fixer fix ./src --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr4",
-            "./bin/php-cs-fixer fix ./tests --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr4"
+            "./bin/php-cs-fixer fix ./src --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr_autoloading",
+            "./bin/php-cs-fixer fix ./tests --allow-risky=yes --rules=@PSR2,no_unused_imports,native_function_invocation,normalize_index_brace,object_operator_without_whitespace,ordered_imports,void_return,psr_autoloading"
         ],
         "uninstall": [
             "rm -rf ./bin",

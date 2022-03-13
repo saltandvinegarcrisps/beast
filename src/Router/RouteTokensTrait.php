@@ -12,18 +12,18 @@ trait RouteTokensTrait
     {
         $path = $this->getPath();
         // contains tokens
-        return \strpos($path, '{') !== false ||
+        return strpos($path, '{') !== false ||
             // contains captures
-            \strpos($path, '(') !== false ||
+            strpos($path, '(') !== false ||
             // contains groups
-            \strpos($path, '[') !== false;
+            strpos($path, '[') !== false;
     }
 
     protected function tokenise(): array
     {
         $pattern = '~\{([A-z0-9\-_]+)(:([A-z0-9",\-_\*]+))?\}~';
 
-        if (\preg_match_all($pattern, $this->getPath(), $matches)) {
+        if (preg_match_all($pattern, $this->getPath(), $matches)) {
             // named parameters to combine when matched with a URL
             $tokens = $matches[1];
 
@@ -55,8 +55,8 @@ trait RouteTokensTrait
             }
 
             // enum pattern "option1,option2"
-            if (\preg_match('~"([^"]+)"~', $token, $match)) {
-                $options = \implode('|', \explode(',', $match[1]));
+            if (preg_match('~"([^"]+)"~', $token, $match)) {
+                $options = implode('|', explode(',', $match[1]));
                 return '('.$options.')';
             }
 
@@ -65,7 +65,7 @@ trait RouteTokensTrait
         };
 
         foreach ($matches[0] as $index => $search) {
-            $path = \str_replace($search, $pattern($matches[3][$index]), $path);
+            $path = str_replace($search, $pattern($matches[3][$index]), $path);
         }
 
         return $path;
