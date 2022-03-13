@@ -23,15 +23,12 @@ class RoutesTest extends TestCase
     {
         $routes = new Routes();
         $options = [
-            'namespace' => 'foo',
             'prefix' => 'bar',
         ];
         $routes->addOptions($options);
-        $this->assertEquals('\\foo\\', $routes->getNamespace());
         $this->assertEquals('bar', $routes->getPrefix());
 
         $routes->removeOptions($options);
-        $this->assertEquals('\\', $routes->getNamespace());
         $this->assertEquals('', $routes->getPrefix());
     }
 
@@ -41,11 +38,9 @@ class RoutesTest extends TestCase
         $routes = new Routes([$route]);
 
         $routes->group([
-            'namespace' => 'foo',
             'prefix' => 'bar',
         ], function (Routes $r) use ($routes): void {
             $this->assertEquals($routes, $r);
-            $this->assertEquals('\\foo\\', $routes->getNamespace());
             $this->assertEquals('bar', $routes->getPrefix());
         });
     }
