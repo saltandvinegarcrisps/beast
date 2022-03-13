@@ -14,24 +14,22 @@ use SplObjectStorage;
  * Class Routes
  *
  * @package Beast\Framework\Router
- * @method Route any(string $path, array|Closure|string $args)
- * @method Route connect(string $path, array|Closure|string $args)
- * @method Route trace(string $path, array|Closure|string $args)
- * @method Route get(string $path, array|Closure|string $args)
- * @method Route head(string $path, array|Closure|string $args)
- * @method Route options(string $path, array|Closure|string $args)
- * @method Route post(string $path, array|Closure|string $args)
- * @method Route put(string $path, array|Closure|string $args)
- * @method Route patch(string $path, array|Closure|string $args)
- * @method Route delete(string $path, array|Closure|string $args)
+ * @method Route any(string $path, array|Closure|class-string $args)
+ * @method Route connect(string $path, array|Closure|class-string $args)
+ * @method Route trace(string $path, array|Closure|class-string $args)
+ * @method Route get(string $path, array|Closure|class-string $args)
+ * @method Route head(string $path, array|Closure|class-string $args)
+ * @method Route options(string $path, array|Closure|class-string $args)
+ * @method Route post(string $path, array|Closure|class-string $args)
+ * @method Route put(string $path, array|Closure|class-string $args)
+ * @method Route patch(string $path, array|Closure|class-string $args)
+ * @method Route delete(string $path, array|Closure|class-string $args)
  */
 class Routes implements Countable, IteratorAggregate
 {
     protected $routes;
 
     protected $segments;
-
-    protected $namespaces;
 
     public function __construct(array $routes = [])
     {
@@ -40,7 +38,6 @@ class Routes implements Countable, IteratorAggregate
             $this->append($route);
         }
         $this->segments = [];
-        $this->namespaces = [];
     }
 
     public function getIterator(): Iterator
@@ -58,20 +55,12 @@ class Routes implements Countable, IteratorAggregate
         if (isset($options['prefix'])) {
             $this->segments[] = \rtrim($options['prefix'], '/');
         }
-
-        if (isset($options['namespace'])) {
-            $this->namespaces[] = '\\'.$options['namespace'];
-        }
     }
 
     public function removeOptions(array $options): void
     {
         if (isset($options['prefix'])) {
             \array_pop($this->segments);
-        }
-
-        if (isset($options['namespace'])) {
-            \array_pop($this->namespaces);
         }
     }
 
@@ -89,22 +78,25 @@ class Routes implements Countable, IteratorAggregate
         return \implode('', $this->segments);
     }
 
-    public function getNamespace(): string
-    {
-        return \implode('', $this->namespaces) . '\\';
-    }
-
     public function append(Route $route): void
     {
         $this->routes->attach($route);
     }
 
+    /**
+     * Create a new Route Definition
+     * 
+     * @param  string $method
+     * @param  string $path
+     * @param  array|Closure|class-string $controller
+     * @return Route
+     */
     public function create(string $method, string $path, $controller): Route
     {
         return new Route(
             $method,
             $this->getPrefix().$path,
-            \is_string($controller) ? $this->getNamespace().$controller : $controller
+            $controller
         );
     }
 
