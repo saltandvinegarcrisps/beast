@@ -28,14 +28,14 @@ use SplObjectStorage;
 class Routes implements Countable, IteratorAggregate
 {
 
-    protected SplObjectStorage $routes;
+    protected $routes;
 
     /**
      * Holds the prefix URL path for the given Route Collection
      * 
      * @var array<int, string>
      */
-    protected array $segments = [];
+    protected $segments = [];
 
 
     /**
@@ -43,14 +43,14 @@ class Routes implements Countable, IteratorAggregate
      * 
      * @var array<int, string>
      */
-    protected array $namespaces = [];
+    protected $namespaces = [];
 
     /**
      * Holds specific middleware for a given Route Collection
      * 
      * @var array<int, class-string>
      */
-    protected array $middleware = [];
+    protected $middleware = [];
 
     public function __construct(array $routes = [])
     {
