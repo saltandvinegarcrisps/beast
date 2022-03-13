@@ -27,11 +27,30 @@ use SplObjectStorage;
  */
 class Routes implements Countable, IteratorAggregate
 {
+
     protected $routes;
 
-    protected $segments;
+    /**
+     * Holds the prefix URL path for the given Route Collection
+     * 
+     * @var array<int, string>
+     */
+    protected $segments = [];
 
-    protected $namespaces;
+
+    /**
+     * Scope the Route Collection to a specific namespace so you can reference a relative Controller
+     * 
+     * @var array<int, string>
+     */
+    protected $namespaces = [];
+
+    /**
+     * Holds specific middleware for a given Route Collection
+     * 
+     * @var array<int, class-string>
+     */
+    protected $middleware = [];
 
     public function __construct(array $routes = [])
     {
@@ -62,6 +81,10 @@ class Routes implements Countable, IteratorAggregate
         if (isset($options['namespace'])) {
             $this->namespaces[] = '\\'.$options['namespace'];
         }
+
+        if (isset($options['middleware'])) {
+            $this->middleware[] = $options['middleware'];
+        }
     }
 
     public function removeOptions(array $options): void
@@ -72,6 +95,10 @@ class Routes implements Countable, IteratorAggregate
 
         if (isset($options['namespace'])) {
             \array_pop($this->namespaces);
+        }
+
+        if (isset($options['middleware'])) {
+            $this->middleware = [];
         }
     }
 
@@ -92,6 +119,16 @@ class Routes implements Countable, IteratorAggregate
     public function getNamespace(): string
     {
         return \implode('', $this->namespaces) . '\\';
+    }
+
+    /**
+     * Return middleware associated to the Route Collection
+     * 
+     * @return array<int, class-string>
+     */
+    public function getMiddleware(): array
+    {
+        return $this->middleware;
     }
 
     public function append(Route $route): void
