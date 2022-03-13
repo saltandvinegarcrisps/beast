@@ -24,7 +24,7 @@ class MiddlewarePriority
 	 *
 	 * This forces the listed middleware to always be in the given order.
 	 * 
-	 * @param  array<int, class-string>
+	 * @param  array<int, class-string> $middleware
 	 * @return array<int, class-string>
 	 */
 	public function sort(array $middleware): array
