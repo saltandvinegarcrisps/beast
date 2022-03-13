@@ -8,7 +8,7 @@ class MiddlewarePriority
 	/**
 	 * @var array<int, class-string>
 	 */
-	private array $priorityMiddleware = [];
+	private $priorityMiddleware = [];
 
 	/**
 	 * @param  array<int, class-string> $priorityMiddleware
