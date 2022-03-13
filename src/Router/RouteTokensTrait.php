@@ -20,7 +20,7 @@ trait RouteTokensTrait
     }
 
     /**
-     * @return array<int, mixed>
+     * @return array<int, bool|float|int|string|array<int|string>>
      */
     protected function tokenise(): array
     {

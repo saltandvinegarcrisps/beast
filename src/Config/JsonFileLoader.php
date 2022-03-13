@@ -27,7 +27,7 @@ class JsonFileLoader extends AbstractFileLoader
 
         $json = json_decode($jsonStr, true, 512, JSON_THROW_ON_ERROR);
 
-        if (!is_array($json)) {
+        if (!\is_array($json)) {
             throw new ConfigException(
                 'JSON config did not return an array: ' . $path
             );

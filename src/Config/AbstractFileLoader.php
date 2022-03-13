@@ -86,12 +86,12 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     {
         [$file, $keys] = $this->parts($name);
 
-        if (!is_string($file)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', gettype($file)));
+        if (!\is_string($file)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', \gettype($file)));
         }
 
-        if (!is_array($keys)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', gettype($keys)));
+        if (!\is_array($keys)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', \gettype($keys)));
         }
 
         $config = $this->load($file);
@@ -117,12 +117,12 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     {
         [$file, $keys] = $this->parts($name);
 
-        if (!is_string($file)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', gettype($file)));
+        if (!\is_string($file)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', \gettype($file)));
         }
 
-        if (!is_array($keys)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', gettype($keys)));
+        if (!\is_array($keys)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', \gettype($keys)));
         }
 
         $config = $this->load($file);

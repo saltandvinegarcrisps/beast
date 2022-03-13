@@ -44,7 +44,7 @@ class Route
     protected $controller;
 
     /**
-     * @var array<string, int|string>
+     * @var array<int|string, mixed>
      */
     protected $params = [];
 
@@ -62,7 +62,7 @@ class Route
     }
 
     /**
-     * @return array<string, int|string|array<mixed>>
+     * @return array<int|string, mixed>
      */
     public function getParams(): array
     {
@@ -139,11 +139,15 @@ class Route
 
         list($path, $tokens) = $this->tokenise();
 
-        if (! preg_match('~^'.$path.'$~', $url, $matches)) {
+        if (\is_string($path) && ! preg_match('~^'.$path.'$~', $url, $matches)) {
             return false;
         }
 
-        if (!is_array($matches)) {
+        if (!isset($matches) || !\is_array($matches)) {
+            return false;
+        }
+
+        if (!\is_array($tokens)) {
             return false;
         }
 

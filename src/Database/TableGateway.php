@@ -52,7 +52,8 @@ abstract class TableGateway
 
         // create anon object class to create rows from
         if ($prototype === null) {
-            $prototype = new class extends Entity {};
+            $prototype = new class extends Entity {
+            };
         }
 
         if (!$prototype instanceof EntityInterface) {

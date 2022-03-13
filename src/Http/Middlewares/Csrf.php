@@ -70,7 +70,7 @@ class Csrf implements MiddlewareInterface
 
         $input = $request->getParsedBody();
 
-        if (is_array($input) && isset($input[$this->inputFieldName])) {
+        if (\is_array($input) && isset($input[$this->inputFieldName])) {
             return $input[$this->inputFieldName];
         }
 

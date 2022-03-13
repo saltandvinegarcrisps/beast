@@ -2,7 +2,6 @@
 
 namespace Beast\Framework\Tests;
 
-use BadMethodCallException;
 use Beast\Framework\Router\Route;
 use Beast\Framework\Router\RouteNotFoundException;
 use Beast\Framework\Router\Routes;

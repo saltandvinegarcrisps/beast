@@ -39,7 +39,7 @@ class Resolver implements ResolverInterface
                 $instance->setContainer($this->container);
             }
 
-            if (is_callable($instance)) {
+            if (\is_callable($instance)) {
                 return $instance($request, $response, $route->getParams());
             }
         }

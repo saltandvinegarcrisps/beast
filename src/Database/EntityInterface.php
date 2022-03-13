@@ -17,12 +17,12 @@ interface EntityInterface
     public function setAttributes(array $attributes): void;
 
     /**
-     * @return array<string, int|string|null> 
+     * @return array<string, int|string|null>
      */
     public function getAttributes(): array;
 
     /**
-     * @return array<string, int|string|null> 
+     * @return array<string, int|string|null>
      */
     public function toArray(): array;
 
