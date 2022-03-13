@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 
 interface ContainerAwareInterface
 {
-    public function setContainer(ContainerInterface $container);
+    public function setContainer(ContainerInterface $container): void;
 
     public function getContainer(): ContainerInterface;
 }

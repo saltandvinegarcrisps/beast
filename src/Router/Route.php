@@ -28,14 +28,31 @@ class Route
 
     public const METHOD_DELETE = 'DELETE';
 
+    /**
+     * @var string
+     */
     protected $method;
 
+    /**
+     * @var string
+     */
     protected $path;
 
+    /**
+     * @var class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string>
+     */
     protected $controller;
 
-    protected $params;
+    /**
+     * @var array<string, int|string>
+     */
+    protected $params = [];
 
+    /**
+     * @param string $method
+     * @param string $path
+     * @param class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     */
     public function __construct(string $method, string $path, $controller)
     {
         $this->setMethod($method);

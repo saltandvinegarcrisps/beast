@@ -3,7 +3,6 @@
 namespace Beast\Framework\Router;
 
 use BadMethodCallException;
-use Closure;
 use Countable;
 use Iterator;
 use IteratorAggregate;
@@ -14,23 +13,25 @@ use SplObjectStorage;
  * Class Routes
  *
  * @package Beast\Framework\Router
- * @method Route any(string $path, array|Closure|class-string $args)
- * @method Route connect(string $path, array|Closure|class-string $args)
- * @method Route trace(string $path, array|Closure|class-string $args)
- * @method Route get(string $path, array|Closure|class-string $args)
- * @method Route head(string $path, array|Closure|class-string $args)
- * @method Route options(string $path, array|Closure|class-string $args)
- * @method Route post(string $path, array|Closure|class-string $args)
- * @method Route put(string $path, array|Closure|class-string $args)
- * @method Route patch(string $path, array|Closure|class-string $args)
- * @method Route delete(string $path, array|Closure|class-string $args)
+ *
+ * @implements \IteratorAggregate<int, Route>
+ *
  */
 class Routes implements Countable, IteratorAggregate
 {
+    /**
+     * @var \SplObjectStorage<Route, null>
+     */
     protected $routes;
 
+    /**
+     * @var array<int, string>
+     */
     protected $segments;
 
+    /**
+     * @param array<int, Route> $routes
+     */
     public function __construct(array $routes = [])
     {
         $this->routes = new SplObjectStorage;
@@ -40,6 +41,9 @@ class Routes implements Countable, IteratorAggregate
         $this->segments = [];
     }
 
+    /**
+     * @return \SplObjectStorage<Route, null>
+     */
     public function getIterator(): Iterator
     {
         return $this->routes;
@@ -50,13 +54,20 @@ class Routes implements Countable, IteratorAggregate
         return $this->routes->count();
     }
 
+    /**
+     * @param array<string, int|string> $options
+     */
     public function addOptions(array $options): void
     {
-        if (isset($options['prefix'])) {
+        if (isset($options['prefix']) && \is_string($options['prefix'])) {
             $this->segments[] = rtrim($options['prefix'], '/');
         }
     }
 
+    /**
+     * @param array<string, int|string> $options
+     * @return void
+     */
     public function removeOptions(array $options): void
     {
         if (isset($options['prefix'])) {
@@ -64,6 +75,11 @@ class Routes implements Countable, IteratorAggregate
         }
     }
 
+    /**
+     * @param array<string, int|string> $options
+     * @param callable(self $routes): void $group
+     * @return void
+     */
     public function group(array $options, callable $group): void
     {
         $this->addOptions($options);
@@ -88,7 +104,7 @@ class Routes implements Countable, IteratorAggregate
      *
      * @param  string $method
      * @param  string $path
-     * @param  array|Closure|class-string $controller
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
      * @return Route
      */
     public function create(string $method, string $path, $controller): Route
@@ -100,28 +116,130 @@ class Routes implements Countable, IteratorAggregate
         );
     }
 
-    public function __call(string $method, array $args): Route
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function any(string $path, $controller)
     {
-        $method = strtoupper($method);
+        $route = $this->create(Route::METHOD_ANY, $path, $controller);
 
-        $allowed = [
-            Route::METHOD_ANY,
-            Route::METHOD_CONNECT,
-            Route::METHOD_TRACE,
-            Route::METHOD_GET,
-            Route::METHOD_HEAD,
-            Route::METHOD_OPTIONS,
-            Route::METHOD_POST,
-            Route::METHOD_PUT,
-            Route::METHOD_PATCH,
-            Route::METHOD_DELETE,
-        ];
+        $this->append($route);
 
-        if (!\in_array($method, $allowed, true)) {
-            throw new BadMethodCallException('Invalid HTTP Method: '.$method);
-        }
+        return $route;
+    }
 
-        $route = $this->create($method, $args[0], $args[1]);
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function connect(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_CONNECT, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function trace(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_TRACE, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function get(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_GET, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function head(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_HEAD, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function options(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_OPTIONS, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function post(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_POST, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function put(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_PUT, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function patch(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_PATCH, $path, $controller);
+
+        $this->append($route);
+
+        return $route;
+    }
+
+    /**
+     * @param  class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return Route
+     */
+    public function delete(string $path, $controller)
+    {
+        $route = $this->create(Route::METHOD_DELETE, $path, $controller);
 
         $this->append($route);
 
