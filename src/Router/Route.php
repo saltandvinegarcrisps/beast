@@ -36,7 +36,7 @@ class Route
 
     protected $params;
 
-    protected $middlewares;
+    protected $middleware;
 
     public function __construct(string $method, string $path, $controller)
     {
@@ -123,13 +123,13 @@ class Route
      */
     public function setMiddleware(string $middleware): self
     {
-        $this->middlewares[] = $middleware;
+        $this->middleware[] = $middleware;
 
         return $this;
     }
 
     public function getMiddleware(): array
     {
-        return $this->middlewares;
+        return $this->middleware;
     }
 }

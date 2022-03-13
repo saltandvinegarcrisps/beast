@@ -96,6 +96,10 @@ class Routes implements Countable, IteratorAggregate
         if (isset($options['namespace'])) {
             \array_pop($this->namespaces);
         }
+
+        if (isset($options['middleware'])) {
+            $this->middleware = [];
+        }
     }
 
     public function group(array $options, callable $group): void
