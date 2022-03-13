@@ -19,6 +19,9 @@ trait RouteTokensTrait
             strpos($path, '[') !== false;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     protected function tokenise(): array
     {
         $pattern = '~\{([A-z0-9\-_]+)(:([A-z0-9",\-_\*]+))?\}~';
@@ -39,6 +42,11 @@ trait RouteTokensTrait
         throw new RuntimeException('No tokens found');
     }
 
+    /**
+     * @param  array<int, array<int, string>> $matches
+     * @param  string $path
+     * @return string
+     */
     protected function parameterise(array $matches, string $path): string
     {
         $pattern = function ($token): string {

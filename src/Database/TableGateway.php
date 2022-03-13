@@ -56,6 +56,10 @@ abstract class TableGateway
             };
         }
 
+        if (!$prototype instanceof EntityInterface) {
+            throw new \LogicException('`$prototype` must be an instance of EntityInterface');
+        }
+
         $this->prototype = $prototype;
 
         if (empty($this->table)) {
@@ -126,8 +130,8 @@ abstract class TableGateway
     /**
      * Execute a query against this table gateway
      *
-     * @param QueryBuilder
-     * @return mixed
+     * @param QueryBuilder $query
+     * @return \Doctrine\DBAL\ForwardCompatibility\DriverStatement|\Doctrine\DBAL\ForwardCompatibility\DriverResultStatement
      * @throws TableGatewayException
      */
     protected function execute(QueryBuilder $query)
@@ -142,7 +146,7 @@ abstract class TableGateway
     /**
      * Create a model entity from database row
      *
-     * @param array
+     * @param array<string, mixed> $attributes
      * @return EntityInterface
      */
     protected function model(array $attributes): EntityInterface
@@ -153,7 +157,7 @@ abstract class TableGateway
     /**
      * Fetch the first row from a query
      *
-     * @param QueryBuilder|null
+     * @param QueryBuilder|null $query
      * @return EntityInterface|null
      */
     public function fetch(QueryBuilder $query = null): ?EntityInterface
@@ -164,7 +168,7 @@ abstract class TableGateway
 
         $statement = $this->execute($query);
 
-        if ($row = $statement->fetch()) {
+        if ($row = $statement->fetchAssociative()) {
             return $this->model($row);
         }
 
@@ -188,7 +192,7 @@ abstract class TableGateway
     /**
      * Convert binary size string (512M) into bytes
      *
-     * @param string
+     * @param string $string
      * @return int
      */
     protected function toBytes(string $string): int
@@ -208,8 +212,8 @@ abstract class TableGateway
     /**
      * Get array of entities from the query
      *
-     * @param QueryBuilder|null
-     * @return array
+     * @param QueryBuilder|null $query
+     * @return array<EntityInterface>
      */
     public function get(QueryBuilder $query = null): array
     {
@@ -240,7 +244,7 @@ abstract class TableGateway
     /**
      * Get unbuffered array of entities from the query
      *
-     * @param QueryBuilder|null
+     * @param QueryBuilder|null $query
      * @return Generator
      */
     public function getUnbuffered(QueryBuilder $query = null): Generator
@@ -259,7 +263,7 @@ abstract class TableGateway
     /**
      * Fetch the first column from the first row of a query
      *
-     * @param QueryBuilder
+     * @param QueryBuilder $query
      * @return mixed
      */
     public function column(QueryBuilder $query = null)
@@ -274,8 +278,8 @@ abstract class TableGateway
     /**
      * Insert array of data returning the insert id
      *
-     * @param array
-     * @return string
+     * @param non-empty-array<string, mixed> $params
+     * @return numeric-string
      */
     public function insert(array $params): string
     {
@@ -284,7 +288,10 @@ abstract class TableGateway
             $sequenceName = $platform->supportsSequences() ?
                 $platform->getIdentitySequenceName($this->table, $this->primary) :
                 null;
-            return $this->getConnection()->lastInsertId($sequenceName);
+
+            $lastInsertId = $this->getConnection()->lastInsertId($sequenceName);
+
+            return $lastInsertId === false || !is_numeric($lastInsertId) ? '0' : (string) $lastInsertId;
         }
 
         return '0';
@@ -293,7 +300,7 @@ abstract class TableGateway
     /**
      * Update from query returning the number of row affected
      *
-     * @param QueryBuilder
+     * @param QueryBuilder $query
      * @return int
      */
     public function update(QueryBuilder $query): int
@@ -301,7 +308,7 @@ abstract class TableGateway
         $query->update($this->table);
 
         try {
-            return $this->getConnection()->executeUpdate($query->getSQL(), $query->getParameters());
+            return (int) $this->getConnection()->executeUpdate($query->getSQL(), $query->getParameters());
         } catch (DriverException $e) {
             throw new TableGatewayException('There was error executing update', 0, $e);
         }
@@ -311,15 +318,13 @@ abstract class TableGateway
      * Delete rows from table gateway using query
      * returning the number of row affected
      *
-     * @param QueryBuilder
+     * @param QueryBuilder $query
      * @return int
      */
     public function delete(QueryBuilder $query): int
     {
         $query->delete($this->table);
 
-        $statement = $this->execute($query);
-
-        return $statement->rowCount();
+        return (int) $this->execute($query)->rowCount();
     }
 }

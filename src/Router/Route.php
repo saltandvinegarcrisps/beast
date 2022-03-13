@@ -61,11 +61,18 @@ class Route
         $this->params = [];
     }
 
+    /**
+     * @return array<string, int|string|array<mixed>>
+     */
     public function getParams(): array
     {
         return $this->params;
     }
 
+    /**
+     * @param string $path
+     * @return self
+     */
     public function setPath(string $path)
     {
         $this->path = rtrim($path, '/') ?: '/';
@@ -78,6 +85,10 @@ class Route
         return $this->path;
     }
 
+    /**
+     * @param class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string> $controller
+     * @return self
+     */
     public function setController($controller)
     {
         $this->controller = $controller;
@@ -85,12 +96,19 @@ class Route
         return $this;
     }
 
+    /**
+     * @return class-string|callable(\Psr\Http\Message\ServerRequestInterface, \Psr\Http\Message\ResponseInterface, array<string, int|string|array<mixed>>): void|non-empty-array<class-string, string>
+     */
     public function getController()
     {
         return $this->controller;
     }
 
-    public function setMethod($method)
+    /**
+     * @param string $method
+     * @return self
+     */
+    public function setMethod(string $method)
     {
         $this->method = strtoupper($method);
 
@@ -122,6 +140,10 @@ class Route
         list($path, $tokens) = $this->tokenise();
 
         if (! preg_match('~^'.$path.'$~', $url, $matches)) {
+            return false;
+        }
+
+        if (!is_array($matches)) {
             return false;
         }
 

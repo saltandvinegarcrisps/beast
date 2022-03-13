@@ -14,6 +14,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Resolver implements ResolverInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
     public function __construct(ContainerInterface $container)
@@ -36,7 +39,9 @@ class Resolver implements ResolverInterface
                 $instance->setContainer($this->container);
             }
 
-            return $instance($request, $response, $route->getParams());
+            if (is_callable($instance)) {
+                return $instance($request, $response, $route->getParams());
+            }
         }
 
         if (\is_array($controller) && \count($controller) === 2) {
@@ -52,7 +57,10 @@ class Resolver implements ResolverInterface
         }
 
         if ($controller instanceof Closure) {
-            return $controller->bindTo($this->container)($request, $response, $route->getParams());
+            $closure = $controller->bindTo($this->container);
+            if ($closure !== null) {
+                return $closure($request, $response, $route->getParams());
+            }
         }
 
         throw new InvalidArgumentException('controller must be a Closure, array or class-string');

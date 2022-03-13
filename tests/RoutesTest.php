@@ -105,14 +105,6 @@ class RoutesTest extends TestCase
         $this->assertCount(1, $routes);
     }
 
-    public function testCreateByMethodFailure(): void
-    {
-        $routes = new Routes();
-
-        $this->expectException(BadMethodCallException::class);
-        $routes->fail('/', 'callback');
-    }
-
     public function testMatch(): void
     {
         $routes = new Routes();

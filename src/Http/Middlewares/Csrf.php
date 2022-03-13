@@ -14,12 +14,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class Csrf implements MiddlewareInterface
 {
+    /**
+     * @var ResponseInterface
+     */
     protected $response;
 
+    /**
+     * @var StorageInterface
+     */
     protected $storage;
 
+    /**
+     * @var string
+     */
     protected $inputFieldName;
 
+    /**
+     * @var string
+     */
     protected $headerFieldName;
 
     public function __construct(
@@ -40,7 +52,7 @@ class Csrf implements MiddlewareInterface
             'POST',
             'PUT',
             'PATCH',
-        ]);
+        ], true);
     }
 
     protected function isValid(ServerRequestInterface $request): bool
@@ -58,7 +70,7 @@ class Csrf implements MiddlewareInterface
 
         $input = $request->getParsedBody();
 
-        if (isset($input[$this->inputFieldName])) {
+        if (is_array($input) && isset($input[$this->inputFieldName])) {
             return $input[$this->inputFieldName];
         }
 
@@ -71,7 +83,7 @@ class Csrf implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (! $this->isMethod($request) || ($this->isMethod($request) && $this->isValid($request))) {
+        if ($this->isMethod($request) && $this->isValid($request)) {
             return $handler->handle($request);
         }
 

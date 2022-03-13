@@ -2,7 +2,6 @@
 
 namespace Beast\Framework\Router;
 
-use BadMethodCallException;
 use Countable;
 use Iterator;
 use IteratorAggregate;
