@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Beast\Framework\Tests;
 
 use Beast\Framework\Config\ConfigException;
 use Beast\Framework\Config\PhpFileLoader as FileLoader;
