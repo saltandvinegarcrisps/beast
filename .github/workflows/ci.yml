@@ -3,15 +3,18 @@ name: CI
 on: [push]
 
 jobs:
-  build-test:
+  phpstan:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v6
-      - uses: php-actions/phpstan@v3
+      - name: PHPStan 7.4
+        uses: php-actions/phpstan@v3
         with:
           path: src/
+          php_version: 7.4
+          configuration: phpstan.neon
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -19,9 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v6
-      - name: PHPUnit tests
+      - name: PHPUnit tests 7.4
         uses: php-actions/phpunit@v3
+        env:
+          XDEBUG_MODE: coverage
         with:
           php_version: 7.4
           bootstrap: vendor/autoload.php
           php_extensions: xdebug mbstring redis
+          args: --coverage-text
