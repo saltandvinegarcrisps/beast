@@ -4,25 +4,33 @@ namespace Beast\Framework\Config;
 
 abstract class AbstractFileLoader implements FileLoaderInterface
 {
+    /**
+     * @var string
+     */
     protected $path;
 
+    /**
+     * @var string
+     */
     protected $extension;
 
     public function __construct(string $path)
     {
-        $this->path = realpath($path);
+        $path = realpath($path);
 
-        if (false === $this->path) {
+        if (false === $path) {
             throw new ConfigException(
                 'Config dir not found: '.$path
             );
         }
+
+        $this->path = $path;
     }
 
     /**
      * Get the path of a config file
      *
-     * @param string
+     * @param string $name
      * @return null|string
      */
     protected function filepath(string $name): ?string
@@ -39,16 +47,16 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     /**
      * Load file contents
      *
-     * @param string
-     * @return null|array
+     * @param string $file
+     * @return array<mixed>|null
      */
     abstract protected function load(string $file): ?array;
 
     /**
      * Split key into parts, the first part will always be the file name
      *
-     * @param string
-     * @return array
+     * @param string $name
+     * @return array<int, array<int, int|string>|string>
      */
     protected function parts(string $name): array
     {
@@ -59,12 +67,6 @@ abstract class AbstractFileLoader implements FileLoaderInterface
         }
 
         $keys = explode('.', $name);
-
-        if (empty($keys)) {
-            throw new ConfigException(
-                'Failed to extract keys from parameter name'
-            );
-        }
 
         $file = array_shift($keys);
 
@@ -83,6 +85,14 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     public function has(string $name): bool
     {
         [$file, $keys] = $this->parts($name);
+
+        if (!is_string($file)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', gettype($file)));
+        }
+
+        if (!is_array($keys)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', gettype($keys)));
+        }
 
         $config = $this->load($file);
 
@@ -106,6 +116,14 @@ abstract class AbstractFileLoader implements FileLoaderInterface
     public function get(string $name, $default = null)
     {
         [$file, $keys] = $this->parts($name);
+
+        if (!is_string($file)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$file` to be a string, got %s', gettype($file)));
+        }
+
+        if (!is_array($keys)) {
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', gettype($keys)));
+        }
 
         $config = $this->load($file);
 

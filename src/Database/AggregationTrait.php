@@ -24,17 +24,17 @@ trait AggregationTrait
     /**
      * Fetch the first column from the first row of a query
      *
-     * @param QueryBuilder
-     * @return mixed
+     * @param QueryBuilder|null $query
+     * @return string|int|null|boolean
      */
     abstract public function column(QueryBuilder $query = null);
 
     /**
      * Run a aggregate function against a column
      *
-     * @param string
-     * @param string
-     * @param QueryBuilder
+     * @param string $method
+     * @param string|null $column
+     * @param QueryBuilder|null $query
      * @return string
      */
     private function aggregate(string $method, string $column = null, QueryBuilder $query = null): string
@@ -58,14 +58,18 @@ trait AggregationTrait
             return '0';
         }
 
-        return $value;
+        if (is_numeric($value)) {
+            return (string) $value;
+        }
+
+        throw new \UnexpectedValueException('`column` did not return a numeric-string or integer');
     }
 
     /**
      * Run count aggregate
      *
-     * @param QueryBuilder
-     * @param string|null
+     * @param QueryBuilder|null $query
+     * @param string|null $column
      * @return string
      */
     public function count(QueryBuilder $query = null, string $column = null): string
@@ -76,8 +80,8 @@ trait AggregationTrait
     /**
      * Run sum aggregate
      *
-     * @param QueryBuilder
-     * @param string|null
+     * @param QueryBuilder|null $query
+     * @param string|null $column
      * @return string
      */
     public function sum(QueryBuilder $query = null, string $column = null): string
@@ -88,8 +92,8 @@ trait AggregationTrait
     /**
      * Run min aggregate
      *
-     * @param QueryBuilder
-     * @param string|null
+     * @param QueryBuilder|null $query
+     * @param string|null $column
      * @return string
      */
     public function min(QueryBuilder $query = null, string $column = null): string
@@ -100,8 +104,8 @@ trait AggregationTrait
     /**
      * Run max aggregate
      *
-     * @param QueryBuilder
-     * @param string|null
+     * @param QueryBuilder|null $query
+     * @param string|null $column
      * @return string
      */
     public function max(QueryBuilder $query = null, string $column = null): string

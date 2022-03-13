@@ -25,14 +25,14 @@ class JsonFileLoader extends AbstractFileLoader
             );
         }
 
-        $data = json_decode($jsonStr, true);
+        $json = json_decode($jsonStr, true, 512, JSON_THROW_ON_ERROR);
 
-        if (null === $data) {
+        if (!is_array($json)) {
             throw new ConfigException(
-                'json_decode error in '.$path.': ' . json_last_error_msg()
+                'JSON config did not return an array: ' . $path
             );
         }
 
-        return $data;
+        return $json;
     }
 }

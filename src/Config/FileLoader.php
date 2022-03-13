@@ -4,8 +4,15 @@ namespace Beast\Framework\Config;
 
 class FileLoader implements FileLoaderInterface
 {
+    /**
+     * @var array<int, FileLoaderInterface>
+     */
     protected $loaders;
 
+    /**
+     * @param string $path
+     * @param array<int, FileLoaderInterface> $loaders
+     */
     public function __construct(string $path, array $loaders = [])
     {
         $this->loaders = $loaders;

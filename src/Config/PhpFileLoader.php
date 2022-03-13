@@ -4,6 +4,9 @@ namespace Beast\Framework\Config;
 
 class PhpFileLoader extends AbstractFileLoader
 {
+    /**
+     * @var string
+     */
     protected $extension = '.php';
 
     /**

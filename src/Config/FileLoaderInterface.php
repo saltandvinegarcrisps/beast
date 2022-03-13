@@ -7,7 +7,7 @@ interface FileLoaderInterface
     /**
      * Key exists in config file
      *
-     * @param string
+     * @param string $name
      * @return bool
      */
     public function has(string $name): bool;
@@ -15,9 +15,9 @@ interface FileLoaderInterface
     /**
      * Find key from config file
      *
-     * @param string
-     * @param mixed
-     * @return mixed
+     * @param string $name
+     * @param null|mixed $default
+     * @return null|mixed
      */
     public function get(string $name, $default = null);
 }

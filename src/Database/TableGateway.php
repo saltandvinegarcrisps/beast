@@ -52,8 +52,7 @@ abstract class TableGateway
 
         // create anon object class to create rows from
         if ($prototype === null) {
-            $prototype = new class extends Entity {
-            };
+            $prototype = new class extends Entity {};
         }
 
         if (!$prototype instanceof EntityInterface) {
@@ -131,7 +130,7 @@ abstract class TableGateway
      * Execute a query against this table gateway
      *
      * @param QueryBuilder $query
-     * @return \Doctrine\DBAL\ForwardCompatibility\DriverStatement|\Doctrine\DBAL\ForwardCompatibility\DriverResultStatement
+     * @return \Doctrine\DBAL\ForwardCompatibility\DriverStatement<int, array<string, int|string|null>>|\Doctrine\DBAL\ForwardCompatibility\DriverResultStatement<int, array<string, int|string|null>>
      * @throws TableGatewayException
      */
     protected function execute(QueryBuilder $query)
@@ -146,7 +145,7 @@ abstract class TableGateway
     /**
      * Create a model entity from database row
      *
-     * @param array<string, mixed> $attributes
+     * @param array<string, int|string|null> $attributes
      * @return EntityInterface
      */
     protected function model(array $attributes): EntityInterface
@@ -168,7 +167,10 @@ abstract class TableGateway
 
         $statement = $this->execute($query);
 
-        if ($row = $statement->fetchAssociative()) {
+        /** @var array<string, int|string|null> $row */
+        $row = $statement->fetchAssociative();
+
+        if ($row) {
             return $this->model($row);
         }
 
