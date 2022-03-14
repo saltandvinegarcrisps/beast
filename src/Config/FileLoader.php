@@ -4,8 +4,15 @@ namespace Beast\Framework\Config;
 
 class FileLoader implements FileLoaderInterface
 {
+    /**
+     * @var array<int, FileLoaderInterface>
+     */
     protected $loaders;
 
+    /**
+     * @param string $path
+     * @param array<int, FileLoaderInterface> $loaders
+     */
     public function __construct(string $path, array $loaders = [])
     {
         $this->loaders = $loaders;
@@ -23,7 +30,7 @@ class FileLoader implements FileLoaderInterface
         $reduce = function (bool $carry, FileLoaderInterface $loader) use ($name) {
             return $loader->has($name) ? true : $carry;
         };
-        return \array_reduce($this->loaders, $reduce, false);
+        return array_reduce($this->loaders, $reduce, false);
     }
 
     /**
@@ -34,6 +41,6 @@ class FileLoader implements FileLoaderInterface
         $reduce = function ($carry, FileLoaderInterface $loader) use ($name) {
             return $loader->has($name) ? $loader->get($name) : $carry;
         };
-        return \array_reduce($this->loaders, $reduce, $default);
+        return array_reduce($this->loaders, $reduce, $default);
     }
 }

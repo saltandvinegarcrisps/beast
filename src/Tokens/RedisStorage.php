@@ -4,8 +4,14 @@ namespace Beast\Framework\Tokens;
 
 class RedisStorage implements StorageInterface
 {
+    /**
+     * @var \Redis
+     */
     protected $redis;
 
+    /**
+     * @var string
+     */
     protected $channel;
 
     public function __construct(\Redis $redis, string $channel = 'csrf_tokens')

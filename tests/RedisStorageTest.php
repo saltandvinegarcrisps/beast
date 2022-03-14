@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Beast\Framework\Tests;
 
 use Beast\Framework\Tokens\RedisStorage;
 use PHPUnit\Framework\TestCase;

@@ -6,17 +6,22 @@ use InvalidArgumentException;
 
 class Paths
 {
+    /**
+     * @var string
+     */
     protected $path;
 
     public function __construct(string $path)
     {
-        $this->path = \realpath($path);
+        $path = realpath($path);
 
-        if (false === $this->path) {
+        if (false === $path) {
             throw new InvalidArgumentException(
                 'Path dir not found: '.$path
             );
         }
+
+        $this->path = $path;
     }
 
     public function resolve(string $relative): string

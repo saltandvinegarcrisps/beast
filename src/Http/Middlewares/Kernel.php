@@ -13,8 +13,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class Kernel implements MiddlewareInterface
 {
+    /**
+     * @var Routes
+     */
     private $routes;
 
+    /**
+     * @var ResolverInterface
+     */
     private $resolver;
 
     public function __construct(Routes $routes, ResolverInterface $resolver)

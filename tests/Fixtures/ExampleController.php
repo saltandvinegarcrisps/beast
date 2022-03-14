@@ -13,4 +13,9 @@ class ExampleController
 
         return $response;
     }
+
+    public function index(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        return $this->__invoke($request, $response);
+    }
 }

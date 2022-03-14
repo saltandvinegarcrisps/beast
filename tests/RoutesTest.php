@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests;
+namespace Beast\Framework\Tests;
 
-use BadMethodCallException;
 use Beast\Framework\Router\Route;
 use Beast\Framework\Router\RouteNotFoundException;
 use Beast\Framework\Router\Routes;
@@ -23,15 +22,12 @@ class RoutesTest extends TestCase
     {
         $routes = new Routes();
         $options = [
-            'namespace' => 'foo',
             'prefix' => 'bar',
         ];
         $routes->addOptions($options);
-        $this->assertEquals('\\foo\\', $routes->getNamespace());
         $this->assertEquals('bar', $routes->getPrefix());
 
         $routes->removeOptions($options);
-        $this->assertEquals('\\', $routes->getNamespace());
         $this->assertEquals('', $routes->getPrefix());
     }
 
@@ -41,11 +37,9 @@ class RoutesTest extends TestCase
         $routes = new Routes([$route]);
 
         $routes->group([
-            'namespace' => 'foo',
             'prefix' => 'bar',
         ], function (Routes $r) use ($routes): void {
             $this->assertEquals($routes, $r);
-            $this->assertEquals('\\foo\\', $routes->getNamespace());
             $this->assertEquals('bar', $routes->getPrefix());
         });
     }
@@ -108,14 +102,6 @@ class RoutesTest extends TestCase
         $route = $routes->delete('/', 'callback');
         $this->assertInstanceof(Route::class, $route);
         $this->assertCount(1, $routes);
-    }
-
-    public function testCreateByMethodFailure(): void
-    {
-        $routes = new Routes();
-
-        $this->expectException(BadMethodCallException::class);
-        $routes->fail('/', 'callback');
     }
 
     public function testMatch(): void

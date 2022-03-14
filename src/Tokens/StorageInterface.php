@@ -8,5 +8,5 @@ interface StorageInterface
 
     public function validate(string $token): bool;
 
-    public function put(string $token);
+    public function put(string $token): bool;
 }
