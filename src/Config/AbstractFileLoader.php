@@ -91,7 +91,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
         }
 
         if (!\is_array($keys)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', \gettype($keys)));
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a array, got %s', \gettype($keys)));
         }
 
         $config = $this->load($file);
@@ -122,7 +122,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
         }
 
         if (!\is_array($keys)) {
-            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a string, got %s', \gettype($keys)));
+            throw new \UnexpectedValueException(sprintf('Expected `$keys` to be a array, got %s', \gettype($keys)));
         }
 
         $config = $this->load($file);
