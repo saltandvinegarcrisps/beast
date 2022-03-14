@@ -44,7 +44,7 @@ class Route
     protected $controller;
 
     /**
-     * @var array<int|string, mixed>
+     * @var array<int|string, mixed>|false
      */
     protected $params = [];
 
@@ -62,9 +62,9 @@ class Route
     }
 
     /**
-     * @return array<int|string, mixed>
+     * @return array<int|string, mixed>|false
      */
-    public function getParams(): array
+    public function getParams()
     {
         return $this->params;
     }
