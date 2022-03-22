@@ -1,0 +1,25 @@
+build:
+    environment:
+        php: 7.4
+    nodes:
+        analysis:
+            project_setup:
+                override:
+                    - 'true'
+            tests:
+                override:
+                    - php-scrutinizer-run
+                    -
+                        command: phpcs-run
+                        use_website_config: true
+                    -
+                        command: bin/phpunit --coverage-clover=clover.xml
+                        coverage:
+                            file: clover.xml
+                            format: php-clover
+        tests: true
+checks:
+    php: true
+coding_style:
+    php: {  }
+filter: {  }
