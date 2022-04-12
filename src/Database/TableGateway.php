@@ -5,6 +5,7 @@ namespace Beast\Framework\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Result;
 use Generator;
 
 abstract class TableGateway
@@ -129,12 +130,8 @@ abstract class TableGateway
 
     /**
      * Execute a query against this table gateway
-     *
-     * @param QueryBuilder $query
-     * @return \Doctrine\DBAL\ForwardCompatibility\DriverStatement<int, array<string, int|string|null>>|\Doctrine\DBAL\ForwardCompatibility\DriverResultStatement<int, array<string, int|string|null>>
-     * @throws TableGatewayException
      */
-    protected function execute(QueryBuilder $query)
+    protected function execute(QueryBuilder $query): Result
     {
         try {
             return $this->getConnection()->executeQuery($query->getSQL(), $query->getParameters());
@@ -168,10 +165,10 @@ abstract class TableGateway
 
         $statement = $this->execute($query);
 
-        /** @var array<string, int|string|null> $row */
-        $row = $statement->fetchAssociative();
-
-        if ($row) {
+        if ((
+            /** @var array<string, int|string|null> $row */
+            $row = $statement->fetchAssociative()
+        ) !== false) {
             return $this->model($row);
         }
 
@@ -224,7 +221,7 @@ abstract class TableGateway
             $query = $this->getQueryBuilder();
         }
 
-        $statement = $this->execute($query);
+        $generator = $this->getUnbuffered($query);
         $results = [];
 
         // when buffering results into array
@@ -233,8 +230,8 @@ abstract class TableGateway
         $current = memory_get_usage();
         $max = $limit - $current;
 
-        foreach ($statement as $row) {
-            $results[] = $this->model($row);
+        foreach ($generator as $row) {
+            $results[] = $row;
             $usage = memory_get_usage();
             if ($usage > $max) {
                 throw new \OverflowException(sprintf('Allowed memory size of %s bytes has been exceeded', $max));
@@ -248,7 +245,7 @@ abstract class TableGateway
      * Get unbuffered array of entities from the query
      *
      * @param QueryBuilder|null $query
-     * @return Generator
+     * @return Generator<EntityInterface>
      */
     public function getUnbuffered(QueryBuilder $query = null): Generator
     {
@@ -256,9 +253,12 @@ abstract class TableGateway
             $query = $this->getQueryBuilder();
         }
 
-        $statement = $this->execute($query);
+        $result = $this->execute($query);
 
-        foreach ($statement as $row) {
+        while ((
+            /** @var array<string, int|string|null> $row */
+            $row = $result->fetchAssociative()
+        ) !== false) {
             yield $this->model($row);
         }
     }
@@ -275,7 +275,7 @@ abstract class TableGateway
             $query = $this->getQueryBuilder();
         }
 
-        return $this->getConnection()->fetchColumn($query->getSQL(), $query->getParameters());
+        return $this->getConnection()->fetchOne($query->getSQL(), $query->getParameters());
     }
 
     /**
